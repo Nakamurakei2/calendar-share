@@ -16,22 +16,20 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginShcemaType) => {
-    console.log(data);
-    
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
       });
       if(res.ok) {
         router.push('/');
       }
     }catch(error: unknown) {
       console.error('error', error);
-
     }
   };
 
