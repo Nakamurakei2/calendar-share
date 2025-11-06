@@ -1,12 +1,20 @@
 # calendar-share
 Creating a Web calendar app to share holidays with my friends.
 
-## tech stach
-- Nextjs
-- TypeScript
-- postgreSQL (TODO: use prisma later)
-
+# Tech Stach
+## Language
+- html
+- css
+- JavaScript
+- TypeScipt
 
 ## library
+- Nextjs
 - cookie
-- 
+- jwt
+- react-hook-form
+- zod
+- bcrypt
+
+## DB
+- postgreSQL
