@@ -2,8 +2,8 @@ import Link from 'next/link';
 import styles from './styles/auth.module.css';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import { loginSchema, LoginShcemaType } from '../types/resolver';
-import { useRouter } from 'next/router';
+import {loginSchema, LoginShcemaType} from '../types/resolver';
+import {useRouter} from 'next/router';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,15 +20,15 @@ export default function LoginPage() {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-        credentials: 'include'
+        credentials: 'include',
       });
-      if(res.ok) {
+      if (res.ok) {
         router.push('/');
       }
-    }catch(error: unknown) {
+    } catch (error: unknown) {
       console.error('error', error);
     }
   };
