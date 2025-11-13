@@ -15,6 +15,7 @@ Creating a Web calendar app to share holidays with my friends.
 - react-hook-form
 - zod
 - bcrypt
+- FullCalendar
 
 ## DB
 - postgreSQL

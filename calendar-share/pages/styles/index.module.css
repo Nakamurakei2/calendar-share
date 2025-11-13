@@ -42,6 +42,7 @@
   display: flex;
   flex-direction: column; /* 縦並び */
   gap: 1rem; /* 各フォーム要素の間隔 */
+  margin: 15px;
 }
 
 .modalContent h2 {
@@ -70,7 +71,7 @@
 }
 
 .modalContent textarea {
-  min-height: 120px;
+  min-height: 100px;
   resize: none;
 }
 
@@ -158,7 +159,6 @@
 :global(.fc-view-harness .fc-view-harness-active) {
   height: 100vh;
 }
-
 
 @media (max-width: 768px) {
   :global(.fc .fc-toolbar) {

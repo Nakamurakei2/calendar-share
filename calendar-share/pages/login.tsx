@@ -20,7 +20,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      message: 'hoge',
+      mesage: 'hoge',
     },
   };
 }
@@ -46,6 +46,9 @@ export default function LoginPage() {
         credentials: 'include',
       });
       if (res.ok) {
+        // localstorageにemailを格納(仮実装)
+        const email = data.email;
+        localStorage.setItem('email', email);
         router.push('/');
       }
     } catch (error: unknown) {
