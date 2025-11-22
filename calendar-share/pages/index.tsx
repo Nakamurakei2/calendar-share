@@ -1,12 +1,14 @@
 import styles from './styles/index.module.css';
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
-import {ChangeEvent, useEffect, useState} from 'react';
+import {createContext, useState} from 'react';
+import {Client} from 'pg';
+import Modal from '../src/components/ui/Modal/Modal';
+import Calendar from '../src/components/ui/Calendar/Calendar';
+import {DateClickArg} from '@fullcalendar/interaction/index.js';
+import {convertDateToString} from '../src/utils/CalendarUtils';
 
-type AddEvent = {
+export type AddEvent = {
   type: string;
   content: string;
   description: string;
@@ -14,6 +16,22 @@ type AddEvent = {
   endDate: string;
   email: string;
 };
+
+type ModalInfo = {
+  type: string;
+  content: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+};
+
+export const MyContext = createContext<ModalInfo>({
+  type: 'holiday',
+  content: '',
+  description: '',
+  startDate: new Date().toLocaleDateString(),
+  endDate: new Date().toLocaleDateString(),
+});
 
 /**
  * useEffectではなくSSRで実行することで、一瞬のログイン前のページの表示を防ぐことができ、
@@ -30,46 +48,50 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   try {
     // JWTの検証
-    jwt.verify(token, process.env.JWT_SECRET!);
+    jwt.verify(token, process.env.JWT_SECRET!); // TODO
+    // DBクライアント作成
+    const client = new Client({
+      // Clientで手動接続
+      connectionString: process.env.DATABASE_URL,
+    });
+
+    // 接続
+    await client.connect();
+    // クエリ実行
+    const result = await client.query('select * from calendars');
+    // 接続終了
+    await client.end();
+
     return {
-      props: {}, // 認証成功
+      props: {
+        calendarData: JSON.stringify(result.rows),
+      },
     };
   } catch (err: unknown) {
-    console.error('err', err);
+    if (err instanceof Error) {
+      console.error('error occured', err);
+    } else {
+      console.error('unexpected error', err);
+    }
     return {
       redirect: {destination: '/login', permanent: false},
     };
   }
 }
 
-export default function IndexPage() {
-  const currentDate = new Date().toLocaleDateString();
-
-  const [selectValue, setSelectValue] = useState<string>('holiday');
-  const [contentValue, setContentValue] = useState<string>('');
-  const [contentDescription, setContentDescription] = useState<string>('');
-  const [startTime, setStartTime] = useState<string>(currentDate);
-  const [endTime, setEndTime] = useState<string>(currentDate);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('email') ?? '';
-    } else return '';
+export default function IndexPage(calendarData: GetServerSidePropsContext) {
+  const [modalInfo, setModalInfo] = useState<ModalInfo>({
+    type: 'holiday',
+    content: '',
+    description: '',
+    startDate: '',
+    endDate: '',
   });
 
-  const handleDateClick = (e: DateClickArg) => {
-    console.log('date clicked', e);
-  };
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   // イベント登録処理
-  const handleAddEvent = async () => {
-    const data: AddEvent = {
-      type: selectValue,
-      content: contentValue,
-      description: contentDescription,
-      startDate: startTime,
-      endDate: endTime,
-      email: email,
-    };
+  const handleAddEvent = async (data: AddEvent) => {
     try {
       const res = await fetch('/api/calendar', {
         method: 'POST',
@@ -80,9 +102,7 @@ export default function IndexPage() {
       });
 
       if (res.ok) {
-        // ダイアログを閉じる。
         setShowModal(false);
-        // カレンダーを更新
       }
     } catch (e: unknown) {
       if (e instanceof Error) {
@@ -91,92 +111,38 @@ export default function IndexPage() {
     }
   };
 
+  /**
+   * カレンダーセルクリック時処理
+   */
+  const handleDateClick = async (e: DateClickArg) => {
+    const date: string = convertDateToString(e.date);
+    setModalInfo(prev => ({
+      ...prev,
+      startDate: date,
+      endDate: date,
+    }));
+    setShowModal(true);
+  };
+
   return (
     <div className={styles.main}>
-      <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        events={[{title: 'event 1', date: '2025-11-01'}]}
-        dateClick={handleDateClick}
-      />
+      <Calendar handleDateClick={handleDateClick} />
 
       {showModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h2>イベント追加</h2>
-
-            <label>
-              イベント種類:
-              <select
-                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                  setSelectValue(e.target.value)
-                }
-              >
-                <option value="holiday">休暇</option>
-                <option value="work">仕事</option>
-                <option value="other">その他</option>
-              </select>
-            </label>
-
-            <label>
-              内容:
-              <input
-                type="text"
-                placeholder="イベント名"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setContentValue(e.target.value)
-                }
-              />
-            </label>
-
-            <label>
-              メモ:
-              <textarea
-                placeholder="詳細メモを入力"
-                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                  setContentDescription(e.target.value)
-                }
-              />
-            </label>
-
-            <label>
-              開始日時:
-              <input
-                type="datetime-local"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setStartTime(e.target.value)
-                }
-                max="9999-12-31" // 年は4桁まで
-              />
-            </label>
-
-            <label>
-              終了日時:
-              <input
-                type="datetime-local"
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setEndTime(e.target.value)
-                }
-                max="9999-12-31" // 年は4桁まで
-              />
-            </label>
-
-            <div className={styles.modalActions}>
-              <button type="button" onClick={handleAddEvent}>
-                追加
-              </button>
-              <button type="button" onClick={() => setShowModal(false)}>
-                閉じる
-              </button>
-            </div>
-          </div>
-        </div>
+        <MyContext.Provider value={modalInfo}>
+          <Modal
+            onSubmit={handleAddEvent}
+            onCloseDialog={() => setShowModal(false)}
+          />
+        </MyContext.Provider>
       )}
 
       <button
         type="button"
         className={styles.addBtn}
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setShowModal(true);
+        }}
       >
         +
       </button>
