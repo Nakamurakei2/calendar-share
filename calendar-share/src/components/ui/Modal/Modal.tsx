@@ -44,9 +44,7 @@ export default function Modal({onSubmit, onCloseDialog}: ModalProps) {
               setSelectValue(e.target.value)
             }
           >
-            <option value="holiday" selected>
-              休暇
-            </option>
+            <option value="holiday">休暇</option>
             <option value="work">仕事</option>
             <option value="other">その他</option>
           </select>

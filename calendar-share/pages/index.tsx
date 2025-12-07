@@ -1,12 +1,13 @@
 import styles from './styles/index.module.css';
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
-import {createContext, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import {Client} from 'pg';
 import Modal from '../src/components/ui/Modal/Modal';
 import Calendar from '../src/components/ui/Calendar/Calendar';
 import {DateClickArg} from '@fullcalendar/interaction/index.js';
 import {convertDateToString} from '../src/utils/CalendarUtils';
+import EventButtons from '../src/components/ui/eventButtons/EventButtons';
 
 export type AddEvent = {
   type: string;
@@ -64,7 +65,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     return {
       props: {
-        calendarData: JSON.stringify(result.rows),
+        calendarProps: JSON.stringify(result.rows),
       },
     };
   } catch (err: unknown) {
@@ -79,7 +80,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function IndexPage(calendarData: GetServerSidePropsContext) {
+export default function IndexPage(calendarProps: any) {
+  const [calendarData, setCalendarData] = useState<ModalInfo[]>(JSON.parse(calendarProps.calendarProps)); // calendar情報格納
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     type: 'holiday',
     content: '',
@@ -87,8 +89,8 @@ export default function IndexPage(calendarData: GetServerSidePropsContext) {
     startDate: '',
     endDate: '',
   });
+  const [showModal, setShowModal] = useState<boolean>(false); // Modal開閉情報
 
-  const [showModal, setShowModal] = useState<boolean>(false);
 
   // イベント登録処理
   const handleAddEvent = async (data: AddEvent) => {
@@ -100,7 +102,7 @@ export default function IndexPage(calendarData: GetServerSidePropsContext) {
         },
         body: JSON.stringify(data),
       });
-
+      setCalendarData(prev => [...prev, data]);
       if (res.ok) {
         setShowModal(false);
       }
@@ -126,7 +128,7 @@ export default function IndexPage(calendarData: GetServerSidePropsContext) {
 
   return (
     <div className={styles.main}>
-      <Calendar handleDateClick={handleDateClick} />
+      <Calendar handleDateClick={handleDateClick} calendarEvents={calendarData} />
 
       {showModal && (
         <MyContext.Provider value={modalInfo}>
@@ -136,6 +138,9 @@ export default function IndexPage(calendarData: GetServerSidePropsContext) {
           />
         </MyContext.Provider>
       )}
+
+      {/* イベント種別 */}
+      <EventButtons />
 
       <button
         type="button"

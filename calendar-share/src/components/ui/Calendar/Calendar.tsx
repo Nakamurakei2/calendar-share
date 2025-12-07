@@ -1,11 +1,10 @@
-import styles from './Calendar.module.css';
-
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
 
 type CalendarProps = {
   handleDateClick: (e: DateClickArg) => void;
+  calendarEvents: CalendarEvent[];
 };
 
 type CalendarEvent = {
@@ -13,34 +12,13 @@ type CalendarEvent = {
   title: string;
   description: string;
   start: string;
-  end: string;
-  backgroundColor: string;
+  backgroundColor?: string;
   borderColor?: string;
-  editable: boolean;
+  editable?: boolean;
 };
 
-const calendarEvents: CalendarEvent[] = [
-  {
-    id: 1,
-    title: 'Qiita書く',
-    description: 'リンクアンドモチベーションのアドベントカレンダーを書く',
-    start: '2025-11-15',
-    end: '2022-12-16',
-    backgroundColor: 'green',
-    editable: true,
-  },
-  {
-    id: 2,
-    title: 'Qiita投稿',
-    description: 'リンクアンドモチベーションのアドベントカレンダーを投稿する',
-    start: '2025-11-18',
-    end: '2022-12-18',
-    backgroundColor: 'green',
-    editable: false,
-  },
-];
 
-export default function Calendar({handleDateClick}: CalendarProps) {
+export default function Calendar({handleDateClick, calendarEvents}: CalendarProps) {
   return (
     <>
       <FullCalendar
@@ -63,6 +41,10 @@ export default function Calendar({handleDateClick}: CalendarProps) {
         }}
         footerToolbar={{
           right: 'prev,next',
+        }}
+        selectable={true}
+        select={(info) => {
+          console.log('info.startstr', info.startStr)
         }}
       />
     </>
