@@ -81,7 +81,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function IndexPage(calendarProps: any) {
-  const [calendarData, setCalendarData] = useState<ModalInfo[]>(JSON.parse(calendarProps.calendarProps)); // calendar情報格納
+  const [calendarData, setCalendarData] = useState<ModalInfo[]>(
+    JSON.parse(calendarProps.calendarProps),
+  ); // calendar情報格納
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     type: 'holiday',
     content: '',
@@ -90,7 +92,6 @@ export default function IndexPage(calendarProps: any) {
     endDate: '',
   });
   const [showModal, setShowModal] = useState<boolean>(false); // Modal開閉情報
-
 
   // イベント登録処理
   const handleAddEvent = async (data: AddEvent) => {
@@ -128,7 +129,10 @@ export default function IndexPage(calendarProps: any) {
 
   return (
     <div className={styles.main}>
-      <Calendar handleDateClick={handleDateClick} calendarEvents={calendarData} />
+      <Calendar
+        handleDateClick={handleDateClick}
+        calendarEvents={calendarData}
+      />
 
       {showModal && (
         <MyContext.Provider value={modalInfo}>
