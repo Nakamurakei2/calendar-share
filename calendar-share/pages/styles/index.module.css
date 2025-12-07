@@ -1,3 +1,20 @@
 .main {
   width: 100%;
 }
+
+.addBtn {
+  border: none;
+  border-radius: 999px;
+  font-size: 2rem;
+  width: 70px;
+  height: 70px;
+  padding: 10px;
+  background-color: #1da1f2;
+  color: #fff;
+  opacity: 0.8;
+  vertical-align: middle;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  cursor: pointer;
+}

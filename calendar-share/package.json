@@ -15,6 +15,10 @@
     "posttest": "npm run lint"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/daygrid": "^6.1.19",
+    "@fullcalendar/interaction": "^6.1.19",
+    "@fullcalendar/react": "^6.1.19",
     "@hookform/resolvers": "^5.2.2",
     "bcrypt": "^6.0.0",
     "cookie": "^1.0.2",
