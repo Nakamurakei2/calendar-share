@@ -1,4 +1,4 @@
-import {ChangeEvent, useContext, useState} from 'react';
+import {ChangeEvent, useContext, useEffect, useState} from 'react';
 import styles from './Modal.module.css';
 import {MyContext} from '../../../../pages';
 import {AddDateRequestType} from '../Calendar/types';
@@ -7,7 +7,6 @@ export type ModalInfo = {
   type: string;
   description: string;
   startDate: string;
-  endDate: string;
 };
 
 type ModalProps = {
@@ -17,19 +16,17 @@ type ModalProps = {
 };
 
 export default function Modal({onSubmit, onCloseDialog, email}: ModalProps) {
-  const {type, description, startDate, endDate} = useContext(MyContext);
+  const {type, description, startDate} = useContext(MyContext);
 
   const [selectValue, setSelectValue] = useState<string>(type);
   const [contentDescription, setContentDescription] =
     useState<string>(description);
   const [startTime, setStartTime] = useState<string>(startDate);
-  const [endTime, setEndTime] = useState<string>(endDate);
 
   const data: AddDateRequestType = {
     type: selectValue,
     description: contentDescription,
     startDate: startTime,
-    endDate: endTime,
     email: email,
   };
 
@@ -64,7 +61,7 @@ export default function Modal({onSubmit, onCloseDialog, email}: ModalProps) {
         <label>
           日時:
           <input
-            type="datetime-local"
+            type="date"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setStartTime(e.target.value)
             }
@@ -72,17 +69,6 @@ export default function Modal({onSubmit, onCloseDialog, email}: ModalProps) {
             max="9999-12-31"
           />
         </label>
-
-        {/* <label>
-          終了日時:
-          <input
-            type="datetime-local"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setEndTime(e.target.value)
-            }
-            max="9999-12-31" // 年は4桁まで
-          />
-        </label> */}
 
         <div className={styles.modalActions}>
           <button type="button" onClick={() => onSubmit(data)}>

@@ -1,29 +1,19 @@
 import styles from './styles/index.module.css';
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
-import {createContext, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import {Client} from 'pg';
 import Modal, {ModalInfo} from '../src/components/ui/Modal/Modal';
 import Calendar from '../src/components/ui/Calendar/Calendar';
-import {addOneDay, convertDateToString} from '../src/utils/CalendarUtils';
+import {convertDateToString} from '../src/utils/CalendarUtils';
 import EventButtons from '../src/components/ui/eventButtons/EventButtons';
-import {
-  AddDateRequestType,
-  CalendarEvent,
-} from '../src/components/ui/Calendar/types';
-import {
-  handleDateClick,
-  onDayShiftBtnClick,
-  onHolydayBtnClick,
-  onNightShiftBtnClick,
-  useCalendarActions,
-} from '../src/hooks/useCalendarActions';
+import {CalendarEvent} from '../src/components/ui/Calendar/types';
+import {useCalendarActions} from '../src/hooks/useCalendarActions';
 
 export const MyContext = createContext<ModalInfo>({
   type: 'holiday',
   description: '',
   startDate: new Date().toLocaleDateString(),
-  endDate: new Date().toLocaleDateString(),
 });
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -79,7 +69,10 @@ export default function IndexPage(calendarProps: any) {
   });
 
   const [calendarData, setCalendarData] = useState<CalendarEvent[]>(
-    JSON.parse(calendarProps.calendarProps),
+    JSON.parse(calendarProps.calendarProps).map((ev: any) => ({
+      ...ev,
+      start: ev.start.split('T')[0],
+    })),
   );
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     type: 'holiday',

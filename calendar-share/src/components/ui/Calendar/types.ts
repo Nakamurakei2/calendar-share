@@ -18,7 +18,6 @@ export type AddDateRequestType = {
   type: string;
   description: string;
   startDate: string;
-  endDate: string;
   email: string;
   id: string;
 };

@@ -42,7 +42,6 @@ export default function Calendar({
         }}
         selectable={true}
         select={info => {
-          console.log('info.star', info.startStr);
           setSelectedDate(info.startStr);
         }}
         // dayCellDidMount={info => console.log('info')}

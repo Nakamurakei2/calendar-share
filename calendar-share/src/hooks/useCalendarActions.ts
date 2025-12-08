@@ -28,10 +28,9 @@ export const useCalendarActions = (
   const onHolidayBtnClick = (): void => {
     // 選択されているdateを取得→「休日」という情報を付与
     const postData: AddDateRequestType = {
-      type: 'holiday',
+      type: '休日',
       description: '',
       startDate: selectedDate,
-      endDate: '',
       email: email,
     };
     handleAddDate(postData);
