@@ -1,0 +1,53 @@
+.eventButtonWrapper {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+/* 共通のボタンスタイル */
+.eventButtonWrapper button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+/* 日勤ボタン */
+.dayShift {
+  background-color: #2196f3; /* 青系 */
+}
+.dayShift:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+}
+.dayShift:active {
+  transform: translateY(1px);
+}
+
+/* 夜勤ボタン */
+.nightShift {
+  background-color: #ff9800; /* オレンジ系 */
+}
+.nightShift:hover {
+  background-color: #f57c00;
+  transform: translateY(-2px);
+}
+.nightShift:active {
+  transform: translateY(1px);
+}
+
+/* 休みボタン */
+.off {
+  background-color: #4caf50; /* 緑系 */
+}
+.off:hover {
+  background-color: #388e3c;
+  transform: translateY(-2px);
+}
+.off:active {
+  transform: translateY(1px);
+}

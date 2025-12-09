@@ -11,17 +11,16 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const {type, content, description, startDate, endDate, email} = req.body;
+      const {type, description, startDate, email} = req.body;
       // DBにデータを登録
-      // 勉強のためあえて現在ログインしているユーザーのidをDBから取得した上で登録する
       const user = await pool.query('select id from users where email = $1', [
         email,
       ]);
       const currentUserId = user.rows[0].id;
 
       const result = await pool.query(
-        'insert into calendars (user_id, type, content, description, start_time, end_time) values ($1, $2, $3, $4, $5, $6) returning *',
-        [currentUserId, type, content, description, startDate, endDate],
+        'insert into calendars (user_id, title, description, start) values ($1, $2, $3, $4) returning *',
+        [currentUserId, type, description, startDate],
       );
 
       if (result.rows.length > 0) {
