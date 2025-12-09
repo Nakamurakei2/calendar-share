@@ -1,21 +1,18 @@
 import {DateClickArg} from '@fullcalendar/interaction';
-import {
-  AddDateRequestType,
-  CalendarEvent,
-} from '../components/ui/Calendar/types';
+import {CalendarResType, CalendarUIType} from '../components/ui/Calendar/types';
 import {addOneDay} from '../utils/CalendarUtils';
 import {Dispatch, SetStateAction} from 'react';
 
 export const useCalendarActions = (
   email: string,
   selectedDate: string,
-  setCalendarData: Dispatch<SetStateAction<CalendarEvent[]>>,
+  setCalendarData: Dispatch<SetStateAction<CalendarUIType[]>>,
   setShowModal: Dispatch<SetStateAction<boolean>>,
   setSelectedDate: Dispatch<SetStateAction<string>>,
 ) => {
   // カレンダーセルクリック時処理
   const handleDateClick = async (e: DateClickArg) => {
-    console.log('calendar cell click', e);
+    // console.log('calendar cell click', e);
   };
 
   // 日勤ボタンクリック時処理
@@ -27,7 +24,7 @@ export const useCalendarActions = (
   // 休日ボタンクリック時処理
   const onHolidayBtnClick = (): void => {
     // 選択されているdateを取得→「休日」という情報を付与
-    const postData: AddDateRequestType = {
+    const postData: CalendarResType = {
       type: '休日',
       description: '',
       startDate: selectedDate,
@@ -50,7 +47,7 @@ export const useCalendarActions = (
   };
 
   // カレンダー登録処理
-  const handleAddDate = async (data: AddDateRequestType) => {
+  const handleAddDate = async (data: CalendarResType) => {
     try {
       const res = await fetch('/api/calendar', {
         method: 'POST',

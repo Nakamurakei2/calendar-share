@@ -7,11 +7,14 @@ import Modal, {ModalInfo} from '../src/components/ui/Modal/Modal';
 import Calendar from '../src/components/ui/Calendar/Calendar';
 import {convertDateToString} from '../src/utils/CalendarUtils';
 import EventButtons from '../src/components/ui/eventButtons/EventButtons';
-import {CalendarEvent} from '../src/components/ui/Calendar/types';
+import {
+  CalendarResType,
+  CalendarUIType,
+} from '../src/components/ui/Calendar/types';
 import {useCalendarActions} from '../src/hooks/useCalendarActions';
 
 export const MyContext = createContext<ModalInfo>({
-  type: 'holiday',
+  type: '休日',
   description: '',
   startDate: new Date().toLocaleDateString(),
 });
@@ -41,9 +44,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     // 接続終了
     await client.end();
 
+    const rows: CalendarUIType[] = result.rows.map(ev => {
+      const d: Date = new Date(ev.start);
+      const jst: Date = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+
+      return {
+        ...ev,
+        start: jst.toISOString().split('T')[0],
+      };
+    });
+
     return {
       props: {
-        calendarProps: JSON.stringify(result.rows),
+        calendarProps: JSON.stringify(rows),
       },
     };
   } catch (err: unknown) {
@@ -58,9 +71,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function IndexPage(calendarProps: any) {
+export default function IndexPage(calendarProps: {calendarProps: string}) {
   const [showModal, setShowModal] = useState<boolean>(false);
-
+  console.log(calendarProps);
   // 好ましくない実装
   const [email, setEmail] = useState<string>(() => {
     if (typeof window !== 'undefined') {
@@ -68,8 +81,8 @@ export default function IndexPage(calendarProps: any) {
     } else return '';
   });
 
-  const [calendarData, setCalendarData] = useState<CalendarEvent[]>(
-    JSON.parse(calendarProps.calendarProps).map((ev: any) => ({
+  const [calendarData, setCalendarData] = useState<CalendarUIType[]>(
+    JSON.parse(calendarProps.calendarProps).map((ev: CalendarUIType) => ({
       ...ev,
       start: ev.start.split('T')[0],
     })),
@@ -103,7 +116,7 @@ export default function IndexPage(calendarProps: any) {
     <div className={styles.main}>
       <Calendar
         handleDateClick={handleDateClick}
-        calendarEvents={calendarData}
+        CalendarUITypes={calendarData}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
       />

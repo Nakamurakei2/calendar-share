@@ -1,7 +1,7 @@
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
 import styles from './Modal.module.css';
 import {MyContext} from '../../../../pages';
-import {AddDateRequestType} from '../Calendar/types';
+import {CalendarResType} from '../Calendar/types';
 
 export type ModalInfo = {
   type: string;
@@ -10,7 +10,7 @@ export type ModalInfo = {
 };
 
 type ModalProps = {
-  onSubmit: (data: AddDateRequestType) => Promise<void>;
+  onSubmit: (data: CalendarResType) => Promise<void>;
   onCloseDialog: () => void;
   email: string;
 };
@@ -23,7 +23,7 @@ export default function Modal({onSubmit, onCloseDialog, email}: ModalProps) {
     useState<string>(description);
   const [startTime, setStartTime] = useState<string>(startDate);
 
-  const data: AddDateRequestType = {
+  const data: CalendarResType = {
     type: selectValue,
     description: contentDescription,
     startDate: startTime,
