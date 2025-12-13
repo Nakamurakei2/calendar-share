@@ -25,25 +25,22 @@ export default function Calendar({
         initialView="dayGridMonth"
         events={CalendarUITypes}
         dateClick={handleDateClick}
+        headerToolbar={{
+          left: '',
+          center: 'prev title next',
+          right: 'today',
+        }}
         buttonText={{
+          today: '今日',
           prev: '<',
           next: '>',
-          prevYear: '<<',
-          nextYear: '>>',
-          today: '今日',
-          month: 'カレンダー',
-          week: '週',
-          day: '日',
-          listMonth: '今月のToDo',
-          listDay: '今日のToDo',
-        }}
-        footerToolbar={{
-          right: 'prev,next',
         }}
         selectable={true}
         select={info => {
           setSelectedDate(info.startStr);
         }}
+        dayMaxEvents={3}
+        height="calc(100vh - 200px)"
         // dayCellDidMount={info => console.log('info')}
       />
     </>
