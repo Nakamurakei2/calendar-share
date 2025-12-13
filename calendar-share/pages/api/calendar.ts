@@ -1,11 +1,10 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import pool from '../../lib/db';
-import {QueryResult} from 'pg';
 import {CalendarUIType} from '../../src/components/ui/Calendar/types';
 
 type ResponseType = {
   message: string;
-  data?: string[];
+  data?: CalendarUIType[];
 };
 
 export default async function handler(

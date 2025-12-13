@@ -7,6 +7,8 @@ const HOLIDAY = '休日';
 const DAY_SHIFT = '日勤';
 const NIGHT_SHIFT = '夜勤';
 
+type DayTypes = typeof HOLIDAY | typeof DAY_SHIFT | typeof NIGHT_SHIFT;
+
 export const useCalendarActions = (
   email: string,
   selectedDate: string,
@@ -20,27 +22,18 @@ export const useCalendarActions = (
   };
 
   // 日勤ボタンクリック時処理
-  const onDayShiftBtnClick = () => {};
+  const onDayShiftBtnClick = async (): Promise<void> => {
+    await calendarEventBtnClick(DAY_SHIFT);
+  };
 
   // 夜勤ボタンクリック時処理
-  const onNightShiftBtnClick = () => {};
+  const onNightShiftBtnClick = async (): Promise<void> => {
+    await calendarEventBtnClick(NIGHT_SHIFT);
+  };
 
   // 休日ボタンクリック時処理
   const onHolidayBtnClick = async (): Promise<void> => {
-    const tempId: string = 'tmpId-' + Date.now();
-    // 選択されているdateを取得→「休日」という情報を付与
-    const postData: CalendarReqType = {
-      type: HOLIDAY,
-      description: '',
-      startDate: selectedDate,
-      email: email,
-      id: tempId,
-    };
-    await handleAddDate(postData);
-
-    // Dateに再度変換+プラス1する
-    const addedDate: string = addOneDay(selectedDate);
-    setSelectedDate(addedDate);
+    await calendarEventBtnClick(HOLIDAY);
   };
 
   // カレンダー登録処理
@@ -73,6 +66,24 @@ export const useCalendarActions = (
         console.error('unexpected error', e);
       }
     }
+  };
+
+  // ボタンクリック時 API問い合わせ共通処理
+  const calendarEventBtnClick = async (dateType: DayTypes): Promise<void> => {
+    const tempId: string = 'tmpId-' + Date.now();
+    const postData: CalendarReqType = {
+      type: dateType,
+      description: '',
+      startDate: selectedDate,
+      email: email,
+      id: tempId,
+    };
+
+    await handleAddDate(postData);
+
+    // Dateに再度変換+プラス1する
+    const addedDate: string = addOneDay(selectedDate);
+    setSelectedDate(addedDate);
   };
 
   return {
