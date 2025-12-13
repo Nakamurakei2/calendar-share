@@ -2,18 +2,18 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
 import {Dispatch, SetStateAction} from 'react';
-import {CalendarEvent} from './types';
+import {CalendarUIType} from './types';
 
 type CalendarProps = {
   handleDateClick: (e: DateClickArg) => void;
-  calendarEvents: CalendarEvent[];
+  CalendarUITypes: CalendarUIType[];
   selectedDate: string;
   setSelectedDate: Dispatch<SetStateAction<string>>;
 };
 
 export default function Calendar({
   handleDateClick,
-  calendarEvents,
+  CalendarUITypes,
   selectedDate,
   setSelectedDate,
 }: CalendarProps) {
@@ -23,7 +23,7 @@ export default function Calendar({
         locale="ja"
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
-        events={calendarEvents}
+        events={CalendarUITypes}
         dateClick={handleDateClick}
         buttonText={{
           prev: '<',
