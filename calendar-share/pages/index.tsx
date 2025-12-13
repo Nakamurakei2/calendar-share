@@ -37,18 +37,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     // 接続
     await client.connect();
     // クエリ実行
-    const result = await client.query('select * from calendars');
+    const result = await client.query(
+      'select id, title, description, start from calendars',
+    );
     // 接続終了
     await client.end();
 
     const rows: CalendarUIType[] = result.rows.map(ev => {
       const d: Date = new Date(ev.start);
-      const jst: Date = new Date(d.getTime() + 9 * 60 * 60 * 1000);
-
-      return {
-        ...ev,
-        start: jst.toISOString().split('T')[0],
-      };
+      const formattedDate: string = convertDateToString(d);
+      return {...ev, start: formattedDate};
     });
 
     return {
@@ -70,7 +68,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 export default function IndexPage(calendarProps: {calendarProps: string}) {
   const [showModal, setShowModal] = useState<boolean>(false);
-  console.log(calendarProps);
   // 好ましくない実装
   const [email, setEmail] = useState<string>(() => {
     if (typeof window !== 'undefined') {
@@ -80,16 +77,12 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
 
   // UI描画用
   const [calendarData, setCalendarData] = useState<CalendarUIType[]>(
-    JSON.parse(calendarProps.calendarProps).map((ev: CalendarUIType) => ({
-      ...ev,
-      start: ev.start.split('T')[0],
-    })),
+    JSON.parse(calendarProps.calendarProps),
   );
   const [modalInfo, setModalInfo] = useState<ModalInfo>({
     type: 'holiday',
     description: '',
     startDate: '',
-    endDate: '',
   });
 
   const [selectedDate, setSelectedDate] = useState<string>(() => {

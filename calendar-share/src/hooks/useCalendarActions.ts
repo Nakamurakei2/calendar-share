@@ -1,6 +1,6 @@
 import {DateClickArg} from '@fullcalendar/interaction';
 import {CalendarReqType, CalendarUIType} from '../components/ui/Calendar/types';
-import {addOneDay} from '../utils/CalendarUtils';
+import {addOneDay, convertDateToString} from '../utils/CalendarUtils';
 import {Dispatch, SetStateAction} from 'react';
 
 const HOLIDAY = '休日';
@@ -26,7 +26,7 @@ export const useCalendarActions = (
   const onNightShiftBtnClick = () => {};
 
   // 休日ボタンクリック時処理
-  const onHolidayBtnClick = (): void => {
+  const onHolidayBtnClick = async (): Promise<void> => {
     const tempId: string = 'tmpId-' + Date.now();
     // 選択されているdateを取得→「休日」という情報を付与
     const postData: CalendarReqType = {
@@ -36,16 +36,7 @@ export const useCalendarActions = (
       email: email,
       id: tempId,
     };
-    handleAddDate(postData);
-
-    const newCalendarEvent: CalendarUIType = {
-      id: tempId,
-      title: HOLIDAY,
-      description: '',
-      start: selectedDate,
-    };
-
-    setCalendarData(prev => [...prev, newCalendarEvent]); // UI更新
+    await handleAddDate(postData);
 
     // Dateに再度変換+プラス1する
     const addedDate: string = addOneDay(selectedDate);
@@ -53,7 +44,7 @@ export const useCalendarActions = (
   };
 
   // カレンダー登録処理
-  const handleAddDate = async (data: CalendarReqType) => {
+  const handleAddDate = async (data: CalendarReqType): Promise<void> => {
     try {
       const res = await fetch('/api/calendar', {
         method: 'POST',
@@ -63,12 +54,23 @@ export const useCalendarActions = (
         body: JSON.stringify(data),
       });
       if (res.ok) {
-        setCalendarData(prev => [...prev, data]);
+        const result: {data: CalendarUIType[]} = await res.json();
+        const startDate: Date = new Date(result.data[0].start);
+        const formattedStartDate: string = convertDateToString(startDate);
+        const calendarData: CalendarUIType = result.data[0];
+        const postData: CalendarUIType = {
+          ...calendarData,
+          start: formattedStartDate,
+        };
+
+        setCalendarData(prev => [...prev, postData]);
         setShowModal(false);
       }
     } catch (e: unknown) {
       if (e instanceof Error) {
         console.error('error', e);
+      } else {
+        console.error('unexpected error', e);
       }
     }
   };
