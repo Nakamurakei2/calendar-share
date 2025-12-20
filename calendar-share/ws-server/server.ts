@@ -26,9 +26,6 @@ wss.on('connection', (ws, req) => {
   // message 受信
   ws.on('message', data => {
     const message = data.toString();
-    console.log(`message from client: ${message}`);
-
-    // 同じ room に broadcast
     rooms.get(roomId).forEach(client => {
       if (client.readyState === ws.OPEN) {
         client.send(message);

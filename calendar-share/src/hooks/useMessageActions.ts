@@ -1,8 +1,15 @@
-export const useMessageActions = () => {
+import {useState} from 'react';
+import {useWebSocket} from './useWebSocket';
+
+export const useMessageActions = (url: string, id: string) => {
+  const [input, setInput] = useState<string>('');
+  const {sendMessage} = useWebSocket(url, id);
+
   // 送信ボタンクリック時処理
-  const onMessageSend = () => {
-    console.log('message send btn clicked');
+  const onMessageSend = (): void => {
+    sendMessage(input);
+    setInput('');
   };
 
-  return {onMessageSend};
+  return {onMessageSend, input, setInput};
 };
