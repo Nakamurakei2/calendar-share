@@ -1,6 +1,10 @@
 import styles from './ChatFooter.module.css';
 
-export default function ChatFooter() {
+type ChatFooterProps = {
+  onMessageSend: () => void;
+};
+
+export default function ChatFooter({onMessageSend}: ChatFooterProps) {
   return (
     <div className={styles.chatFooterWrapper}>
       <input
@@ -8,7 +12,9 @@ export default function ChatFooter() {
         className={styles.chatInput}
         placeholder="input any message"
       />
-      <button className={styles.submitButton}>送信</button>
+      <button className={styles.submitButton} onClick={onMessageSend}>
+        送信
+      </button>
     </div>
   );
 }

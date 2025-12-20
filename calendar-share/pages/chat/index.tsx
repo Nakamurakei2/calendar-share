@@ -19,13 +19,24 @@ const ChatIndexPage = () => {
       />
 
       {/* 動的にhref要素を変更する */}
-      <Link className={styles.chatLists} href={'/chat/1'}>
+      <Link className={styles.chatLists} href={'/chat/room1'}>
         {/* demo */}
         <div className={styles.chatList}>
           <img src="" alt="" className={styles.chatImg} />
           <div className={styles.chatListContent}>
             <p className={styles.chatPersonName}>うーな</p>
             <p className={styles.chatLastSentence}>最後の文章</p>
+          </div>
+        </div>
+      </Link>
+
+      <Link className={styles.chatLists} href={'/chat/room2'}>
+        {/* demo */}
+        <div className={styles.chatList}>
+          <img src="" alt="" className={styles.chatImg} />
+          <div className={styles.chatListContent}>
+            <p className={styles.chatPersonName}>room2</p>
+            <p className={styles.chatLastSentence}>Room2の最後の文章</p>
           </div>
         </div>
       </Link>

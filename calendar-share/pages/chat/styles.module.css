@@ -51,5 +51,18 @@
 .chatRoomWrapper {
   width: 100%;
   height: 100%;
-  
+
+  .chatMessage {
+    border-radius: 7px;
+    padding: 6px;
+  }
+
+  .chatMessage.mine {
+    background-color: #bdf4a2;
+  }
+
+  .chatMessage.theirs {
+    background-color: #e0e0e0;
+  }
 }
+
