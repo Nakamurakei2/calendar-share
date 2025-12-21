@@ -3,6 +3,7 @@ import styles from './styles.module.css';
 import {useRouter} from 'next/router';
 import {useMessageActions} from '../../src/hooks/useMessageActions';
 import {useWebSocket} from '../../src/hooks/useWebSocket';
+import ChatHeader from '../../src/components/ui/ChatHeader/ChatHeader';
 
 export const WEBSOCKET_URL = 'ws://localhost:8080';
 
@@ -19,6 +20,8 @@ export default function ChatPage() {
 
   return (
     <div className={styles.chatRoomWrapper}>
+      <ChatHeader />
+
       {messages.map((message, id) => (
         <p
           key={id}

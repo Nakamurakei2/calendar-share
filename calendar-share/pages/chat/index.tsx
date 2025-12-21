@@ -7,7 +7,6 @@ import Link from 'next/link';
 
 const ChatIndexPage = () => {
   const router = useRouter();
-
   const {onCalendarBtnClick, onChatBtnClick} = useFooterActions(router);
 
   return (

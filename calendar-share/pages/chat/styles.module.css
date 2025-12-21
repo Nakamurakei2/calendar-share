@@ -51,6 +51,7 @@
 .chatRoomWrapper {
   width: 100%;
   height: 100%;
+  margin-top: 60px;
 
   .chatMessage {
     border-radius: 7px;
