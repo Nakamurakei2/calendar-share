@@ -21,7 +21,7 @@ export default function ChatFooter({
         value={input}
         onChange={e => setInput(e.target.value)}
       />
-      <button className={styles.submitButton} onClick={onMessageSend}>
+      <button className={input ? styles.submitButton : styles.disableSubmitBtn} onClick={onMessageSend}>
         送信
       </button>
     </div>

@@ -28,4 +28,14 @@
     color: #fff;
     border-radius: 4px;
   }
+
+  .disableSubmitBtn {
+    position: absolute;
+    right: 10px;
+    border: none;
+    padding: 3px 10px;
+    background-color: rgb(183, 183, 183);
+    color: #fff;
+    border-radius: 4px;
+  }
 }
