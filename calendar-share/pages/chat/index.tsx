@@ -12,7 +12,7 @@ const ChatIndexPage = () => {
   const [userData, setUserData] = useState<UserResponse[]>([]);
   const [searchValue, setSearchValue] = useState<string>(''); // 文字列検索用
   const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
-    useFooterActions(router);
+    useFooterActions();
 
   useEffect(() => {
     // userデータをfetch

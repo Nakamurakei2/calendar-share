@@ -127,7 +127,7 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
 
   // Footer btn actions
   const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
-    useFooterActions(router);
+    useFooterActions();
 
   return (
     <div className={styles.main}>
