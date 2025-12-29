@@ -1,0 +1,66 @@
+.profileWrapper {
+  padding: 3%;
+}
+
+.profileHeader {
+  text-align: center;
+  margin: 0px;
+  font-weight: 600;
+}
+
+.profileContainer {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-top: 10%;
+
+  .profileSubtitle {
+    font-size: 14px;
+    color: #5f5f5f;
+    margin: 0;
+  }
+
+  .profileContent {
+    margin-top: 4%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+
+    p {
+      margin: 0;
+    }
+    
+    p.title {
+      font-weight: 600;
+      color: #000;
+      font-size: 15px;
+    }
+
+    p.value {
+      position: relative;
+      font-size: 14px;
+      color: #5f5f5f;
+      height: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    p.value:after {
+      content: '>';
+      position: absolute;
+      top: 0;
+      right: -10px;
+    }
+  }
+}
+
+.contactLink {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 60px;
+  text-align: center;
+}
