@@ -14,8 +14,10 @@ import {
   NIGHT_SHIFT,
 } from '../src/components/ui/Calendar/types';
 import {useCalendarActions} from '../src/hooks/useCalendarActions';
+import {useFooterActions} from '../src/hooks/useFooterActions';
+import Footer from '../src/components/ui/footer/Footer';
+import {useRouter} from 'next/router';
 
-// イベントタイプごとの色設定
 const EVENT_COLORS = {
   [HOLIDAY]: {backgroundColor: '#10b981', borderColor: '#059669'},
   [DAY_SHIFT]: {backgroundColor: '#3b82f6', borderColor: '#2563eb'},
@@ -79,6 +81,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function IndexPage(calendarProps: {calendarProps: string}) {
+  const router = useRouter();
   const [showModal, setShowModal] = useState<boolean>(false);
   // 好ましくない実装
   const [email, setEmail] = useState<string>(() => {
@@ -107,6 +110,7 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
     return convertDateToString(new Date());
   });
 
+  // Calendar event actions
   const {
     handleDateClick,
     onDayShiftBtnClick,
@@ -120,6 +124,9 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
     setShowModal,
     setSelectedDate,
   );
+
+  // Footer btn actions
+  const {onCalendarBtnClick, onChatBtnClick} = useFooterActions(router);
 
   return (
     <div className={styles.main}>
@@ -140,20 +147,24 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
         </MyContext.Provider>
       )}
 
-      {/* イベント登録用ボタン */}
       <EventButtons
         onDayShiftBtnClick={onDayShiftBtnClick}
         onNightShiftBtnClick={onNightShiftBtnClick}
         onHolydayBtnClick={onHolidayBtnClick}
       />
-
+      {/* 
       <button
         type="button"
         className={styles.addBtn}
         onClick={() => setShowModal(true)}
       >
         +
-      </button>
+      </button> */}
+
+      <Footer
+        onCalendarBtnClick={onCalendarBtnClick}
+        onChatBtnClick={onChatBtnClick}
+      />
     </div>
   );
 }

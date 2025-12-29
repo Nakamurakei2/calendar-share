@@ -1,0 +1,25 @@
+.chatHeader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 50px;
+  border-bottom: 1px solid #000;
+  display: flex;
+
+  .leftArrow {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .username {
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+}
