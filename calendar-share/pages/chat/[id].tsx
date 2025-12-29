@@ -15,12 +15,11 @@ export default function ChatPage() {
     WEBSOCKET_URL,
     id as string,
   );
-
   const {messages} = useWebSocket(WEBSOCKET_URL, id as string);
 
   return (
     <div className={styles.chatRoomWrapper}>
-      <ChatHeader />
+      <ChatHeader name={id as string} />
 
       {messages.map((message, id) => (
         <p

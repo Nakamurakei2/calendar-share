@@ -1,7 +1,11 @@
 import {useRouter} from 'next/router';
 import styles from './ChatHeader.module.css';
 
-export default function ChatHeader() {
+type Props = {
+  name: string;
+};
+
+export default function ChatHeader({name}: Props) {
   const router = useRouter();
 
   const handleBack = () => {
@@ -18,7 +22,7 @@ export default function ChatHeader() {
         ←
       </p>
 
-      <p className={styles.username}>名前</p>
+      <p className={styles.username}>{name}</p>
     </div>
   );
 }
