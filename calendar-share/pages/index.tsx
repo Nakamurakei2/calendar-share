@@ -126,7 +126,8 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
   );
 
   // Footer btn actions
-  const {onCalendarBtnClick, onChatBtnClick} = useFooterActions(router);
+  const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
+    useFooterActions(router);
 
   return (
     <div className={styles.main}>
@@ -164,6 +165,7 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
       <Footer
         onCalendarBtnClick={onCalendarBtnClick}
         onChatBtnClick={onChatBtnClick}
+        onProfileBtnClick={onProfileBtnClick}
       />
     </div>
   );

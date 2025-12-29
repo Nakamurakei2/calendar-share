@@ -9,8 +9,14 @@ export const useFooterActions = router => {
     router.push('/chat');
   };
 
+  // profile btn click
+  const onProfileBtnClick = () => {
+    router.push('/profile');
+  };
+
   return {
     onCalendarBtnClick,
     onChatBtnClick,
+    onProfileBtnClick,
   };
 };
