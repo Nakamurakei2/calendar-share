@@ -4,13 +4,13 @@ import {useRouter} from 'next/router';
 import Footer from '../../src/components/ui/footer/Footer';
 import {useFooterActions} from '../../src/hooks/useFooterActions';
 import Link from 'next/link';
-import {ChangeEvent, useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import { UserResponse } from './types';
 
 const ChatIndexPage = () => {
   const router = useRouter();
-  const [inputValue, setInputValue] = useState<string>('');
   const [userData, setUserData] = useState<UserResponse[]>([]);
+  const [searchValue, setSearchValue] = useState<string>(''); // 文字列検索用
   const {onCalendarBtnClick, onChatBtnClick} = useFooterActions(router);
 
   useEffect(() => {
@@ -25,10 +25,15 @@ const ChatIndexPage = () => {
     fetchUsers();
   },[]);
 
-  // TODO：chatlist内検索処理
-  const onChangechatListSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
+
+  /**
+   * usememo is to cache the calculation result
+   * never to be executed unless the deps changed
+   */
+  const filteredUserData: UserResponse[] = useMemo(() => {
+    return searchValue ? userData.filter(user => user.name.includes(searchValue)): userData
+  },[userData, searchValue]);
+
 
   return (
     <div className={styles.chatPageWrapper}>
@@ -36,13 +41,12 @@ const ChatIndexPage = () => {
         type="search"
         className={styles.searchInput}
         placeholder="search friend"
-        value={inputValue}
-        onChange={onChangechatListSearch}
+        value={searchValue}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)}
       />
 
-      {userData.map((user, id) => (
-      <Link key={id} className={styles.chatLists} href={'/chat/room1'}>
-        {/* demo */}
+      {filteredUserData.map((user, id) => (
+      <Link key={id} className={styles.chatLists} href={`/chat/${user.name}`}>
         <div className={styles.chatList}>
           <img src="" alt="" className={styles.chatImg} />
           <div className={styles.chatListContent}>
