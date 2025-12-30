@@ -11,7 +11,8 @@ const ChatIndexPage = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<UserResponse[]>([]);
   const [searchValue, setSearchValue] = useState<string>(''); // 文字列検索用
-  const {onCalendarBtnClick, onChatBtnClick} = useFooterActions(router);
+  const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
+    useFooterActions();
 
   useEffect(() => {
     // userデータをfetch
@@ -62,6 +63,7 @@ const ChatIndexPage = () => {
       <Footer
         onChatBtnClick={onChatBtnClick}
         onCalendarBtnClick={onCalendarBtnClick}
+        onProfileBtnClick={onProfileBtnClick}
       />
     </div>
   );

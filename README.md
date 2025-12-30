@@ -8,14 +8,8 @@ Creating a Web calendar app to share holidays with my friends.
 - JavaScript
 - TypeScipt
 
-## library
+## Framework
 - Nextjs
-- jwt
-- react-hook-form
-- zod
-- bcrypt
-- FullCalendar
-- socket.io
 
 ## DB
 - postgreSQL

@@ -1,4 +1,3 @@
-import styles from './styles/index.module.css';
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
 import {createContext, useState} from 'react';
@@ -126,10 +125,11 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
   );
 
   // Footer btn actions
-  const {onCalendarBtnClick, onChatBtnClick} = useFooterActions(router);
+  const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
+    useFooterActions();
 
   return (
-    <div className={styles.main}>
+    <div className="max-w-7xl mx-auto box-border min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
       <Calendar
         handleDateClick={handleDateClick}
         CalendarUITypes={calendarData}
@@ -164,6 +164,7 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
       <Footer
         onCalendarBtnClick={onCalendarBtnClick}
         onChatBtnClick={onChatBtnClick}
+        onProfileBtnClick={onProfileBtnClick}
       />
     </div>
   );

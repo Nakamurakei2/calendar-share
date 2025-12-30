@@ -1,0 +1,131 @@
+/* 背景 */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    #f9fafb 0%,
+    #f1f5f9 100%
+  );
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+}
+
+/* レイアウト */
+.container {
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ヘッダー */
+.header {
+  position: sticky;
+  top: 0;
+  padding: 20px;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* 閉じる */
+.closeButton {
+  position: absolute;
+  right: 20px;
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+}
+
+/* カード */
+.card {
+  margin: 24px 16px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* フィールド */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* 現在番号 */
+.current {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* input */
+.field input {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.field input::placeholder {
+  color: #94a3b8;
+}
+
+.field input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  outline: none;
+}
+
+/* 保存ボタン */
+.saveButton {
+  margin-top: 8px;
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  background: linear-gradient(
+    135deg,
+    #6366f1,
+    #3b82f6
+  );
+  box-shadow:
+    0 8px 20px rgba(59, 130, 246, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.saveButton:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 12px 28px rgba(59, 130, 246, 0.45);
+}
+
+.saveButton:active {
+  transform: translateY(0);
+}

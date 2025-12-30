@@ -3,15 +3,14 @@
   bottom: 0;
   display: flex;
   align-items: center;
+  justify-content: space-around;
   width: 100%;
   left: 0;
   right: 0;
   gap: 1px;
+  border-top: 1px solid #bababa;
 
-  button {
-    width: stretch;
-    background-color: rgb(193, 224, 251);
-    border: none;
-    padding: 2% 5%;
+  img:hover {
+    opacity: 0.8;
   }
 }
