@@ -19,7 +19,7 @@ const ProfileIndexPage = () => {
       <ProfileHeader />
 
       {activeSetting === 'phoneNumber' ? (
-        <PhoneNumberSetting />
+        <PhoneNumberSetting close={close} />
       ) : (
         <UsernameSetting />
       )}

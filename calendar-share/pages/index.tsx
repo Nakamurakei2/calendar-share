@@ -1,4 +1,3 @@
-import styles from './styles/index.module.css';
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
 import {createContext, useState} from 'react';
@@ -130,7 +129,7 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
     useFooterActions();
 
   return (
-    <div className={styles.main}>
+    <div className="max-w-7xl mx-auto box-border min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
       <Calendar
         handleDateClick={handleDateClick}
         CalendarUITypes={calendarData}

@@ -1,60 +1,85 @@
-body {
-  margin: 0;
+/* =====================
+   Page Wrapper
+===================== */
+.profileWrapper {
+  min-height: 100vh;
+  padding-bottom: 80px;
 }
 
+/* =====================
+   Profile Container
+===================== */
 .profileContainer {
-  width: 100%;
-  height: auto;
+  margin: 16px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.08);
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  padding: 7% 5% 0;
-
-  .profileSubtitle {
-    font-size: 15px;
-    color: #5f5f5f;
-    margin: 0;
-  }
-
-  .profileContent {
-    margin-top: 4%;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-
-
-    p {
-      margin: 0;
-    }
-    
-    p.title {
-      font-weight: 600;
-      color: #000;
-      font-size: 15px;
-    }
-
-    p.value {
-      position: relative;
-      font-size: 14px;
-      color: #5f5f5f;
-      height: auto;
-      display: flex;
-      align-items: center;
-    }
-
-    p.value:after {
-      content: '>';
-      position: absolute;
-      top: 0;
-      right: -12px;
-    }
-  }
+  gap: 12px;
 }
 
+/* =====================
+   Subtitle
+===================== */
+.profileSubtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0 0 8px;
+}
+
+/* =====================
+   Row
+===================== */
+.profileContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.profileContent:hover {
+  background-color: #f1f5f9;
+}
+
+/* =====================
+   Text
+===================== */
+.title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.value {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* =====================
+   Contact Link
+===================== */
 .contactLink {
-  position: fixed;
-  right: 0;
-  left: 0;
-  bottom: 60px;
   text-align: center;
+  font-size: 14px;
+  color: #64748b;
+  margin: 20px 0;
+}
+
+.contactLink a {
+  color: #6366f1;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contactLink a:hover {
+  text-decoration: underline;
 }
