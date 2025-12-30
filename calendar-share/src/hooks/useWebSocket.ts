@@ -5,8 +5,8 @@ export const useWebSocket = (url: string, id: string) => {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const URL = `${url}?roomId=${id}`;
-    const ws = new WebSocket(URL);
+    const URL: string = `${url}?roomId=${id}`;
+    const ws: WebSocket = new WebSocket(URL);
     wsRef.current = ws;
 
     // 成功時に送信(debug)
@@ -36,6 +36,7 @@ export const useWebSocket = (url: string, id: string) => {
     };
   }, [url, id]);
 
+  // send Message func
   const sendMessage = (msg: string): void => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(msg);
@@ -45,5 +46,5 @@ export const useWebSocket = (url: string, id: string) => {
     }
   };
 
-  return {messages, sendMessage};
+  return {messages, setMessages, sendMessage};
 };
