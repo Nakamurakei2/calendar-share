@@ -1,7 +1,8 @@
-import React, {useEffect, useReducer} from 'react';
+import React, {useReducer} from 'react';
 import Footer from '../../src/components/ui/footer/Footer';
 import {useFooterActions} from '../../src/hooks/useFooterActions';
 import styles from './styles.module.css';
+import {useRouter} from 'next/router';
 
 type State = {
   name: string;
@@ -47,6 +48,7 @@ const isValidate = (state: State): string | null => {
 };
 
 const ContactIndexPage = () => {
+  const router = useRouter();
   const [state, dispatch] = useReducer(formReducer, formInitialValue);
   const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
     useFooterActions();
@@ -85,7 +87,22 @@ const ContactIndexPage = () => {
 
   return (
     <form className={styles.contactWrapper}>
-      <h1 className={styles.title}>問い合わせ</h1>
+      <div className={styles.contactHeaderWraper}>
+        <h1 className={styles.title}>問い合わせ</h1>
+        <p
+          className={styles.leftArrow}
+          onClick={() => {
+            if (window.history.length > 0) {
+              router.back();
+            } else {
+              router.push('/profile');
+            }
+          }}
+        >
+          ←
+        </p>
+      </div>
+
       <div className={styles.contactContainer}>
         <label htmlFor="name">名前</label>
         <input

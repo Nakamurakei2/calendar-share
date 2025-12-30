@@ -10,7 +10,7 @@ const PhoneNumberSetting = ({close}: Props) => {
       <div className={styles.container}>
         <header className={styles.header}>
           <h2 className={styles.title}>電話番号を変更</h2>
-          <button className={styles.closeButton} onClick={close}>
+          <button className={styles.closeButton} onClick={() => close()}>
             ×
           </button>
         </header>

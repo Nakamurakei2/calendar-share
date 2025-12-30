@@ -2,11 +2,30 @@
    Page Wrapper
 ===================== */
 .contactWrapper {
-  min-height: 100vh;
   padding: 24px 16px 80px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.contactHeaderWraper {
+  width: 100%;
+  position: relative;
+  height: 50px;
+
+  .leftArrow {
+    height: auto;
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+  }
 }
 
 /* =====================
@@ -119,4 +138,5 @@
   background-color: #e5e7eb;
   color: #9ca3af;
   cursor: not-allowed;
+  pointer-events: none;
 }

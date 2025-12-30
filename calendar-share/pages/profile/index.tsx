@@ -20,9 +20,9 @@ const ProfileIndexPage = () => {
 
       {activeSetting === 'phoneNumber' ? (
         <PhoneNumberSetting close={close} />
-      ) : (
-        <UsernameSetting />
-      )}
+      ) : activeSetting === 'username' ? (
+        <UsernameSetting close={close} />
+      ) : null}
 
       <div className={styles.profileContainer}>
         <p className={styles.profileSubtitle}>基本情報</p>

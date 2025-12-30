@@ -2,7 +2,6 @@
    Page Wrapper
 ===================== */
 .profileWrapper {
-  min-height: 100vh;
   padding-bottom: 80px;
 }
 
@@ -38,7 +37,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 12px;
+  padding: 5px 12px;
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -54,7 +53,7 @@
 .title {
   margin: 0;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   color: #0f172a;
 }
 
