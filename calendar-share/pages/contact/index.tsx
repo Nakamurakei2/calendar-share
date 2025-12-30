@@ -2,7 +2,7 @@ import React, {useReducer} from 'react';
 import Footer from '../../src/components/ui/footer/Footer';
 import {useFooterActions} from '../../src/hooks/useFooterActions';
 import styles from './styles.module.css';
-import {useRouter} from 'next/router';
+import {NextRouter, useRouter} from 'next/router';
 
 type State = {
   name: string;
@@ -48,7 +48,7 @@ const isValidate = (state: State): string | null => {
 };
 
 const ContactIndexPage = () => {
-  const router = useRouter();
+  const router: NextRouter = useRouter();
   const [state, dispatch] = useReducer(formReducer, formInitialValue);
   const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
     useFooterActions();

@@ -15,7 +15,6 @@ const ChatIndexPage = () => {
     useFooterActions();
 
   useEffect(() => {
-    // userデータをfetch
     const fetchUsers = async (): Promise<void> => {
       const res = await fetch('/api/users', {
         method: 'GET',

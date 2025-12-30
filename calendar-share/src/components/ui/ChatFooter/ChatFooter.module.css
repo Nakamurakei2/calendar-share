@@ -37,5 +37,6 @@
     background-color: rgb(183, 183, 183);
     color: #fff;
     border-radius: 4px;
+    pointer-events: none;
   }
 }

@@ -1,14 +1,20 @@
 import {WebSocketServer} from 'ws';
 import {parse} from 'url';
+import {Pool} from 'pg';
+
+const pool: Pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  connectionTimeoutMillis: 10000, // 10秒
+});
 
 const wss = new WebSocketServer({port: 8080});
 
 // roomId => Set<WebSocket>
 const rooms = new Map();
 
-wss.on('connection', (ws, req) => {
+wss.on('connection', async (ws, req) => {
   const {query} = parse(req.url, true);
-  const roomId = query.roomId as string;
+  const roomId = query.roomId as string; // TODO：roomIDは一意なものに変更する
   if (!roomId) {
     ws.close();
     return;
@@ -20,12 +26,21 @@ wss.on('connection', (ws, req) => {
   }
 
   rooms.get(roomId).add(ws);
-
   console.log(`connected to room ${roomId}`);
 
+  const userQuery = await pool.query('select id from users where name = $1', [
+    roomId,
+  ]);
+  const userId: number = userQuery.rows[0]?.id;
+
   // message 受信
-  ws.on('message', data => {
-    const message = data.toString();
+  ws.on('message', async data => {
+    const message: string = data.toString();
+    await pool.query(
+      'insert into messages (user_id, content) values ($1, $2)',
+      [userId, message],
+    );
+
     rooms.get(roomId).forEach(client => {
       if (client.readyState === ws.OPEN) {
         client.send(message);

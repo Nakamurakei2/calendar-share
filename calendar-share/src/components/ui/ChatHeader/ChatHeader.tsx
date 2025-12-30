@@ -1,4 +1,4 @@
-import {useRouter} from 'next/router';
+import {NextRouter, useRouter} from 'next/router';
 import styles from './ChatHeader.module.css';
 
 type Props = {
@@ -6,9 +6,9 @@ type Props = {
 };
 
 export default function ChatHeader({name}: Props) {
-  const router = useRouter();
+  const router: NextRouter = useRouter();
 
-  const handleBack = () => {
+  const handleBack = (): void => {
     if (window.history.length > 1) {
       router.back(); // using browser history to go back
     } else {

@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction} from 'react';
+import {Dispatch, SetStateAction, useEffect} from 'react';
 import styles from './ChatFooter.module.css';
 
 type ChatFooterProps = {
@@ -21,7 +21,10 @@ export default function ChatFooter({
         value={input}
         onChange={e => setInput(e.target.value)}
       />
-      <button className={input ? styles.submitButton : styles.disableSubmitBtn} onClick={onMessageSend}>
+      <button
+        className={input ? styles.submitButton : styles.disableSubmitBtn}
+        onClick={onMessageSend}
+      >
         送信
       </button>
     </div>
