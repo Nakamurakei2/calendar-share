@@ -24,7 +24,7 @@ export default async function handler(
           [currentUserId],
         );
         const messageRows = messageData.rows;
-        const messages: MessageObj[] = messageRows.map(message => {
+        const messages = messageRows.map(message => {
           return {messages: message.content, createdAt: message.created_at};
         });
 

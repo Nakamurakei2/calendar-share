@@ -4,5 +4,6 @@ export type UserResponse = {
 
 export type MessageObj = {
   messages: string;
+  userId: string;
   createdAt: string;
 };

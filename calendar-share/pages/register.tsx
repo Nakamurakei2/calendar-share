@@ -16,6 +16,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       redirect: {destination: '/', permanent: false},
     };
   }
+
+  return {
+    props: {
+      message: 'hoge',
+    },
+  };
 }
 
 export default function RegisterPage() {

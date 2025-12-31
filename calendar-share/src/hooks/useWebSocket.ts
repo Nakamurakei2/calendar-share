@@ -13,12 +13,12 @@ export const useWebSocket = (url: string, id: string) => {
     // 成功時に送信(debug)
     ws.addEventListener('open', () => {
       console.log('websocket successfully connected!!');
-      // ws.send('websocket successfully connected!');
+      // websocketと接続できたときに、現在のログイン中のユーザーのIDを渡す
     });
 
     // recieve message from server
     ws.addEventListener('message', event => {
-      // console.log('message from server', event.data);
+      console.log('message from server', event.data);
       const parsedData: MessageObj = JSON.parse(event.data);
       setMessages(prev => [...prev, parsedData]);
     });

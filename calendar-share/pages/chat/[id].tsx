@@ -4,20 +4,21 @@ import {NextRouter, useRouter} from 'next/router';
 import {useMessageActions} from '../../src/hooks/useMessageActions';
 import {useWebSocket} from '../../src/hooks/useWebSocket';
 import ChatHeader from '../../src/components/ui/ChatHeader/ChatHeader';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {convertDateTimeToString} from '../../src/utils/CalendarUtils';
 import {MessageObj} from './types';
 
 export const WEBSOCKET_URL = 'ws://localhost:8080';
 
 export default function ChatPage() {
-  const isMine = true; // TODO
+  const [myMessage, setMyMessage] = useState<boolean>(true);
   const router: NextRouter = useRouter();
   const {id} = router.query;
   const {input, setInput, onMessageSend} = useMessageActions(
     WEBSOCKET_URL,
     id as string,
   );
+
   const {messages, setMessages} = useWebSocket(WEBSOCKET_URL, id as string);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -41,6 +42,8 @@ export default function ChatPage() {
     if (bottomRef) bottomRef.current?.scrollIntoView();
   }, [messages]);
 
+  console.log('messages', messages);
+
   return (
     <div className={styles.chatRoomWrapper}>
       <ChatHeader name={id as string} />
@@ -48,11 +51,15 @@ export default function ChatPage() {
       {messages.map((message, id) => (
         <div key={id}>
           <p
-            className={`${styles.chatMessage} ${isMine ? styles.mine : styles.theirs}`}
+            className={`${styles.chatMessage} ${myMessage ? styles.mine : styles.theirs}`}
           >
             {message.messages}
           </p>
-          <span className={styles.messageDate}>
+          <span
+            className={
+              myMessage ? styles.myMessageDate : styles.theirMessageDate
+            }
+          >
             {convertDateTimeToString(new Date(message.createdAt))}
           </span>
         </div>
