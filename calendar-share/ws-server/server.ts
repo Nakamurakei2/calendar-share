@@ -12,7 +12,6 @@ const pool: Pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   connectionTimeoutMillis: 10000, // 10秒
 });
-
 const wss = new WebSocketServer({port: 8080});
 
 // roomId => Set<WebSocket>

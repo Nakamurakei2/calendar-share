@@ -11,7 +11,7 @@ import {MessageObj} from './types';
 export const WEBSOCKET_URL = 'ws://localhost:8080';
 
 export default function ChatPage() {
-  const [myMessage, setMyMessage] = useState<boolean>(true);
+  const [partnerId, setPartnerId] = useState<number | null>(null);
   const router: NextRouter = useRouter();
   const {id} = router.query;
   const {input, setInput, onMessageSend} = useMessageActions(
@@ -34,7 +34,6 @@ export default function ChatPage() {
         setMessages(messages);
       }
     };
-
     fetchMessages();
   }, [id, setMessages]);
 
@@ -42,7 +41,17 @@ export default function ChatPage() {
     if (bottomRef) bottomRef.current?.scrollIntoView();
   }, [messages]);
 
-  console.log('messages', messages);
+  useEffect(() => {
+    // getUserId
+    const fetchPartnerId = async () => {
+      const res = await fetch(`/api/userId?id=${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setPartnerId(data.partnerId);
+      }
+    };
+    fetchPartnerId();
+  }, [id]);
 
   return (
     <div className={styles.chatRoomWrapper}>
@@ -51,13 +60,16 @@ export default function ChatPage() {
       {messages.map((message, id) => (
         <div key={id}>
           <p
-            className={`${styles.chatMessage} ${myMessage ? styles.mine : styles.theirs}`}
+            className={`${styles.chatMessage} 
+            ${partnerId !== message.userId ? styles.mine : styles.theirs}`}
           >
             {message.messages}
           </p>
           <span
             className={
-              myMessage ? styles.myMessageDate : styles.theirMessageDate
+              partnerId !== message.userId
+                ? styles.myMessageDate
+                : styles.theirMessageDate
             }
           >
             {convertDateTimeToString(new Date(message.createdAt))}

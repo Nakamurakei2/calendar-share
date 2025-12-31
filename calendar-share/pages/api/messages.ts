@@ -18,17 +18,21 @@ export default async function handler(
         [id],
       );
       const currentUserId: number = currentUserData.rows[0]?.id;
+      console.log('currentUserId', currentUserId);
       if (currentUserId) {
         const messageData = await pool.query(
-          'select content, created_at from messages where user_id = $1',
-          [currentUserId],
+          'select content, user_id, created_at from messages',
         );
         const messageRows = messageData.rows;
+        // 特定のユーザーのメッセージしか返してない？？？
         const messages = messageRows.map(message => {
-          return {messages: message.content, createdAt: message.created_at};
+          return {
+            messages: message.content,
+            userId: message.user_id,
+            createdAt: message.created_at,
+          };
         });
 
-        console.log('mesage!!!!!!!!!!!!!', messages);
         return res.status(200).json({messages: messages});
       } else {
         return res.status(404).json({messages: []});

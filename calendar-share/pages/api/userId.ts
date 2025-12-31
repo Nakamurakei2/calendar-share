@@ -1,10 +1,8 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import pool from '../../lib/db';
-import jwt from 'jsonwebtoken';
 
 export type ResponseData = {
-  isSamePerson?: boolean;
-  error?: string | Error;
+  partnerId: number;
 };
 
 export default async function handler(
@@ -16,27 +14,7 @@ export default async function handler(
     const userData = await pool.query('select id from users where name = $1', [
       id,
     ]);
-    const partnerId: number = userData.rows[0]?.id;
-
-    const token: string | undefined = req.cookies.token;
-    if (!token) return res.status(400).json({error: 'token not found'}); // 適当
-
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-        userId: number;
-      };
-      const userId: number = decoded.userId;
-      if (partnerId === userId) {
-        return res.status(200).json({isSamePerson: true});
-      } else {
-        return res.status(200).json({isSamePerson: false});
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        return res.status(500).json({error: error});
-      } else {
-        return res.status(500).json({error: 'unexpected error'});
-      }
-    }
+    const partnerId: number | undefined = userData.rows[0]?.id;
+    if (partnerId) return res.status(200).json({partnerId: partnerId});
   }
 }

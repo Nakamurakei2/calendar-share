@@ -4,6 +4,6 @@ export type UserResponse = {
 
 export type MessageObj = {
   messages: string;
-  userId: string;
+  userId: number; // メッセージを送信したuser ID
   createdAt: string;
 };
