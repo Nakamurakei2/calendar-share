@@ -1,7 +1,7 @@
 /**
  * convert Date object into YYYY/MM/dd
  * @param date clicked date
- * @return YYYY/MM/dd:hh:mm
+ * @return YYYY/MM/dd
  */
 export const convertDateToString = (date: Date): string => {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${String(date.getDate()).padStart(2, '0')}`;
@@ -21,4 +21,14 @@ export const addOneDay = (date: string): string => {
   dateObj.setDate(dateObj.getDate() + 1);
 
   return convertDateToString(dateObj);
+};
+
+/**
+ * convert Date object to YYYY/MM/dd hh:mm
+ * @return YYYY/MM/dd hh:mm
+ */
+export const convertDateTimeToString = (date: Date): string => {
+  return date.toLocaleString('ja-JP', {
+    timeZone: 'Asia/Tokyo',
+  });
 };

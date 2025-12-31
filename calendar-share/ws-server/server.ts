@@ -36,14 +36,15 @@ wss.on('connection', async (ws, req) => {
   // message 受信
   ws.on('message', async data => {
     const message: string = data.toString();
-    await pool.query(
-      'insert into messages (user_id, content) values ($1, $2)',
+    const messageDate = await pool.query(
+      'insert into messages (user_id, content) values ($1, $2) returning created_at',
       [userId, message],
     );
+    const createdAt = messageDate.rows[0]?.created_at;
 
     rooms.get(roomId).forEach(client => {
       if (client.readyState === ws.OPEN) {
-        client.send(message);
+        client.send(JSON.stringify({messages: message, createdAt: createdAt}));
       }
     });
   });

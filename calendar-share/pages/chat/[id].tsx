@@ -4,7 +4,9 @@ import {NextRouter, useRouter} from 'next/router';
 import {useMessageActions} from '../../src/hooks/useMessageActions';
 import {useWebSocket} from '../../src/hooks/useWebSocket';
 import ChatHeader from '../../src/components/ui/ChatHeader/ChatHeader';
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
+import {convertDateTimeToString} from '../../src/utils/CalendarUtils';
+import {MessageObj} from './types';
 
 export const WEBSOCKET_URL = 'ws://localhost:8080';
 
@@ -17,6 +19,7 @@ export default function ChatPage() {
     id as string,
   );
   const {messages, setMessages} = useWebSocket(WEBSOCKET_URL, id as string);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     // fetch message
@@ -26,7 +29,7 @@ export default function ChatPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        const messages: string[] = data.messages;
+        const messages: MessageObj[] = data.messages;
         setMessages(messages);
       }
     };
@@ -34,18 +37,27 @@ export default function ChatPage() {
     fetchMessages();
   }, [id, setMessages]);
 
+  useEffect(() => {
+    if (bottomRef) bottomRef.current?.scrollIntoView();
+  }, [messages]);
+
   return (
     <div className={styles.chatRoomWrapper}>
       <ChatHeader name={id as string} />
 
       {messages.map((message, id) => (
-        <p
-          key={id}
-          className={`${styles.chatMessage} ${isMine ? styles.mine : styles.theirs}`}
-        >
-          {message}
-        </p>
+        <div key={id}>
+          <p
+            className={`${styles.chatMessage} ${isMine ? styles.mine : styles.theirs}`}
+          >
+            {message.messages}
+          </p>
+          <span className={styles.messageDate}>
+            {convertDateTimeToString(new Date(message.createdAt))}
+          </span>
+        </div>
       ))}
+      <div ref={bottomRef}></div>
       <ChatFooter
         input={input}
         setInput={setInput}
