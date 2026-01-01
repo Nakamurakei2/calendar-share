@@ -34,8 +34,9 @@ wss.on('connection', async (ws, req) => {
     }
   }
 
-  const {query} = parse(req.url, true);
-  const roomId = query.roomId as string; // TODO：roomIDは一意なものに変更する
+  // const roomId = query.roomId as string; // TODO：roomIDは一意なものに変更する
+  const roomId = 1922;
+
   if (!roomId) {
     ws.close();
     return;
@@ -53,12 +54,18 @@ wss.on('connection', async (ws, req) => {
   ws.on('message', async data => {
     const message: string = data.toString();
     const messageDate = await pool.query(
-      'insert into messages (user_id, content) values ($1, $2) returning created_at',
-      [ws.userId, message],
+      'insert into messages (room_id, user_id, content) values ($1, $2, $3) returning created_at',
+      [roomId, ws.userId, message],
     );
     const createdAt: Date = messageDate.rows[0]?.created_at; // add type
 
     rooms.get(roomId).forEach(client => {
+      console.log('send to client', {
+        sender: ws.userId,
+        target: client.userId,
+        same: client === ws,
+      });
+
       if (client.readyState === ws.OPEN) {
         client.send(
           JSON.stringify({

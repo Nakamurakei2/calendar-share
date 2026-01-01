@@ -19,7 +19,7 @@ export default function ChatPage() {
     id as string,
   );
 
-  const {messages, setMessages} = useWebSocket(WEBSOCKET_URL, id as string);
+  const {messages, setMessages} = useWebSocket(WEBSOCKET_URL, '19_22');
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -35,6 +35,7 @@ export default function ChatPage() {
       }
     };
     fetchMessages();
+    console.log('useeffect1');
   }, [id, setMessages]);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     // getUserId
-    const fetchPartnerId = async () => {
+    const fetchPartnerId = async (): Promise<void> => {
       const res = await fetch(`/api/userId?id=${id}`);
       if (res.ok) {
         const data = await res.json();
