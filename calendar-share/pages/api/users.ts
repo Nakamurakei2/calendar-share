@@ -24,9 +24,10 @@ export default async function handler(
     };
     const userId: number = decoded.userId;
 
-    const result = await pool.query('select name from users where id != $1', [
-      userId,
-    ]);
+    const result = await pool.query(
+      'select id, name from users where id != $1',
+      [userId],
+    );
     const names: UserResponse[] = result.rows;
     res.status(200).json(names);
   }

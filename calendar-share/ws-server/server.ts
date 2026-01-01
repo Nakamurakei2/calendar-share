@@ -18,6 +18,7 @@ const wss = new WebSocketServer({port: 8080});
 const rooms = new Map();
 
 wss.on('connection', async (ws, req) => {
+  const {query} = parse(req.url!, true);
   // Current logged in user's user_id
   const cookieHeader = req.headers.cookie;
   const token: string | null = parseTokenFromCookie(cookieHeader);
@@ -35,7 +36,9 @@ wss.on('connection', async (ws, req) => {
   }
 
   // const roomId = query.roomId as string; // TODO：roomIDは一意なものに変更する
-  const roomId = 1922;
+  const roomId = Number(query.roomId); // TODO：fix
+
+  console.log('roomId!!!', roomId);
 
   if (!roomId) {
     ws.close();
@@ -60,12 +63,6 @@ wss.on('connection', async (ws, req) => {
     const createdAt: Date = messageDate.rows[0]?.created_at; // add type
 
     rooms.get(roomId).forEach(client => {
-      console.log('send to client', {
-        sender: ws.userId,
-        target: client.userId,
-        same: client === ws,
-      });
-
       if (client.readyState === ws.OPEN) {
         client.send(
           JSON.stringify({
