@@ -1,8 +1,9 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import pool from '../../lib/db';
+import {MessageObj} from '../chat/types';
 
 type ResponseData = {
-  messages: string[];
+  messages: MessageObj[];
 };
 
 export default async function handler(
@@ -17,15 +18,21 @@ export default async function handler(
         [id],
       );
       const currentUserId: number = currentUserData.rows[0]?.id;
+      console.log('currentUserId', currentUserId);
       if (currentUserId) {
         const messageData = await pool.query(
-          'select content from messages where user_id = $1',
-          [currentUserId],
+          'select content, user_id, created_at from messages',
         );
         const messageRows = messageData.rows;
-        const messages: string[] = messageRows.map(message => {
-          return message.content;
+        // 特定のユーザーのメッセージしか返してない？？？
+        const messages = messageRows.map(message => {
+          return {
+            messages: message.content,
+            userId: message.user_id,
+            createdAt: message.created_at,
+          };
         });
+
         return res.status(200).json({messages: messages});
       } else {
         return res.status(404).json({messages: []});

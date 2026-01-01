@@ -1,7 +1,8 @@
 import {useEffect, useRef, useState} from 'react';
+import {MessageObj} from '../../pages/chat/types';
 
 export const useWebSocket = (url: string, id: string) => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<MessageObj[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -12,13 +13,14 @@ export const useWebSocket = (url: string, id: string) => {
     // 成功時に送信(debug)
     ws.addEventListener('open', () => {
       console.log('websocket successfully connected!!');
-      // ws.send('websocket successfully connected!');
+      // websocketと接続できたときに、現在のログイン中のユーザーのIDを渡す
     });
 
-    // recieve message
-    ws.addEventListener('message', (event: MessageEvent) => {
+    // recieve message from server
+    ws.addEventListener('message', event => {
       console.log('message from server', event.data);
-      setMessages(prev => [...prev, event.data]);
+      const parsedData: MessageObj = JSON.parse(event.data);
+      setMessages(prev => [...prev, parsedData]);
     });
 
     // on error
