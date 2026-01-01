@@ -7,25 +7,27 @@ import ChatHeader from '../../src/components/ui/ChatHeader/ChatHeader';
 import {useEffect, useRef, useState} from 'react';
 import {convertDateTimeToString} from '../../src/utils/CalendarUtils';
 import {MessageObj} from './types';
+import {generateRoomId} from '../../src/utils/generateRoomIdUtils';
 
 export const WEBSOCKET_URL = 'ws://localhost:8080';
 
 export default function ChatPage() {
-  const [partnerId, setPartnerId] = useState<number | null>(null);
+  const [roomId, setRoomId] = useState<number>(0);
+  const [currentUserId, setCurrentUserId] = useState<number>();
   const router: NextRouter = useRouter();
-  const {id} = router.query;
+  const {id, name} = router.query;
   const {input, setInput, onMessageSend} = useMessageActions(
     WEBSOCKET_URL,
-    id as string,
+    roomId,
   );
 
-  const {messages, setMessages} = useWebSocket(WEBSOCKET_URL, '19_22');
+  const {messages, setMessages} = useWebSocket(WEBSOCKET_URL, roomId);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     // fetch message
     const fetchMessages = async (): Promise<void> => {
-      const res = await fetch(`/api/messages?id=${id}`, {
+      const res = await fetch(`/api/messages?id=${roomId}`, {
         method: 'GET',
       });
       if (res.ok) {
@@ -35,40 +37,44 @@ export default function ChatPage() {
       }
     };
     fetchMessages();
-    console.log('useeffect1');
-  }, [id, setMessages]);
+  }, [roomId, setMessages]);
 
   useEffect(() => {
     if (bottomRef) bottomRef.current?.scrollIntoView();
   }, [messages]);
 
   useEffect(() => {
-    // getUserId
-    const fetchPartnerId = async (): Promise<void> => {
-      const res = await fetch(`/api/userId?id=${id}`);
+    const fetchUserId = async () => {
+      const res = await fetch(`/api/user_id`);
       if (res.ok) {
         const data = await res.json();
-        setPartnerId(data.partnerId);
+        const currentUserId: number = data.currentUserId;
+
+        setCurrentUserId(currentUserId);
+        // setRoomId
+        // 小さい数字から結合するように修正
+        const unionIds: string = generateRoomId(currentUserId, Number(id));
+        setRoomId(Number(unionIds));
       }
     };
-    fetchPartnerId();
+    fetchUserId();
   }, [id]);
 
   return (
     <div className={styles.chatRoomWrapper}>
-      <ChatHeader name={id as string} />
+      <ChatHeader name={name as string} />
 
       {messages.map((message, id) => (
         <div key={id}>
           <p
             className={`${styles.chatMessage} 
-            ${partnerId !== message.userId ? styles.mine : styles.theirs}`}
+            ${currentUserId === message.userId ? styles.mine : styles.theirs}`}
           >
             {message.messages}
           </p>
           <span
             className={
-              partnerId !== message.userId
+              currentUserId === message.userId
                 ? styles.myMessageDate
                 : styles.theirMessageDate
             }
