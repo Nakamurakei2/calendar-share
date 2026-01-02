@@ -2,9 +2,11 @@ import {NextApiRequest, NextApiResponse} from 'next';
 import pool from '../../lib/db';
 import {UserResponse} from '../chat/types';
 import jwt from 'jsonwebtoken';
+import {ResponseData} from '../../types/global';
 
-type ResponseData = {
-  message: string;
+type UserQuery = {
+  id: number;
+  name: string;
 };
 
 /**
@@ -13,18 +15,19 @@ type ResponseData = {
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<UserResponse[] | ResponseData>,
+  res: NextApiResponse<ResponseData | UserResponse[]>,
 ) {
   if (req.method === 'GET') {
     const token: string | undefined = req.cookies.token;
-    if (!token) return res.status(400).json({message: 'failed'}); // 適当
+    if (!token)
+      return res.status(400).json({status: 'error', message: 'failed'}); // 適当
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
       userId: number;
     };
     const userId: number = decoded.userId;
 
-    const result = await pool.query(
+    const result = await pool.query<UserQuery>(
       'select id, name from users where id != $1',
       [userId],
     );
