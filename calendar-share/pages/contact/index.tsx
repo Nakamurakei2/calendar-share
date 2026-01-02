@@ -3,6 +3,7 @@ import Footer from '../../src/components/ui/footer/Footer';
 import {useFooterActions} from '../../src/hooks/useFooterActions';
 import styles from './styles.module.css';
 import {NextRouter, useRouter} from 'next/router';
+import {ResponseData} from '../../types/global';
 
 type State = {
   name: string;
@@ -10,13 +11,17 @@ type State = {
   content: string;
 };
 
-type Action = {
-  type: string;
-  payload?: {
-    inputType: string;
-    value: string;
-  };
-};
+type Action =
+  | {
+      type: 'changeState';
+      payload?: {
+        inputType: string;
+        value: string;
+      };
+    }
+  | {
+      type: 'resetState';
+    };
 
 const formReducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -30,7 +35,6 @@ const formReducer = (state: State, action: Action): State => {
     case 'resetState':
       return formInitialValue;
   }
-  return state;
 };
 
 const formInitialValue: State = {
@@ -65,24 +69,38 @@ const ContactIndexPage = () => {
       },
       body: JSON.stringify(state),
     });
-    if (res.ok) {
+
+    if (!res.ok) {
+      console.error('HTTP error', res.status);
+      return;
+    }
+
+    const resData: ResponseData = await res.json();
+    if (resData.status === 'success') {
       dispatch({type: 'resetState'});
       alert('送信されました');
+      console.debug(resData.message);
+    } else {
+      console.error(resData.message);
     }
   };
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ): void => {
-    const target = e.target;
+    const target: EventTarget | null = e.target;
 
-    dispatch({
-      type: 'changeState',
-      payload: {
-        inputType: target.name,
-        value: e.target.value,
-      },
-    });
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement
+    )
+      dispatch({
+        type: 'changeState',
+        payload: {
+          inputType: target.name,
+          value: e.target.value,
+        },
+      });
   };
 
   return (

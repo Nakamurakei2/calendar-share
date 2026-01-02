@@ -5,8 +5,6 @@ export const useWebSocket = (url: string, roomId: number) => {
   const [messages, setMessages] = useState<MessageObj[]>([]);
   const wsRef = useRef<WebSocket | null>(null);
 
-  console.log('roomId', roomId);
-
   useEffect(() => {
     const URL: string = `${url}?roomId=${roomId}`;
     const ws: WebSocket = new WebSocket(URL);

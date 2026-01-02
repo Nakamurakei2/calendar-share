@@ -1,8 +1,11 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import nodemailer from 'nodemailer';
+import {ResponseData} from '../../types/global';
 
-type ResponseData = {
-  message: string;
+type MailerRequestBody = {
+  name: string;
+  email: string;
+  content: string;
 };
 
 export default function handler(
@@ -10,7 +13,7 @@ export default function handler(
   res: NextApiResponse<ResponseData>,
 ) {
   if (req.method == 'POST') {
-    const {name, email, content} = req.body;
+    const {name, email, content} = req.body as MailerRequestBody;
     const transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
       port: parseInt(process.env.MAIL_PORT as string),
@@ -32,9 +35,13 @@ export default function handler(
       });
 
       if (info.accepted) {
-        return res.status(200).json({message: 'send message successfully!'});
+        return res
+          .status(200)
+          .json({status: 'success', message: 'send message successfully!'});
       } else {
-        return res.status(500).json({message: 'failed to send'});
+        return res
+          .status(500)
+          .json({status: 'error', message: 'failed to send'});
       }
     })();
   }

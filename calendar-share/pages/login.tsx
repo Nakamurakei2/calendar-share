@@ -3,9 +3,10 @@ import styles from './styles/auth.module.css';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {loginSchema, LoginShcemaType} from '../types/resolver';
-import {useRouter} from 'next/router';
+import {NextRouter, useRouter} from 'next/router';
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
+import {ResponseData} from '../types/global';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const token: string | undefined = context.req.cookies?.token;
@@ -19,14 +20,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: {
-      mesage: 'hoge',
-    },
+    props: {},
   };
 }
 
 export default function LoginPage() {
-  const router = useRouter();
+  const router: NextRouter = useRouter();
   const {
     register,
     handleSubmit,
@@ -35,7 +34,7 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginShcemaType) => {
+  const onSubmit = async (data: LoginShcemaType): Promise<void> => {
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
@@ -45,14 +44,26 @@ export default function LoginPage() {
         body: JSON.stringify(data),
         credentials: 'include',
       });
-      if (res.ok) {
-        // localstorageにemailを格納(仮実装)
-        const email = data.email;
+      if (!res.ok) {
+        console.error('HTTP error', res.status);
+        return;
+      }
+      const resData: ResponseData = await res.json();
+
+      if (resData.status === 'success') {
+        console.debug(resData.message);
+        const email: string = data.email;
         localStorage.setItem('email', email);
         router.push('/');
+      } else {
+        console.error('login error', resData.message);
       }
     } catch (error: unknown) {
-      console.error('error', error);
+      if (error instanceof Error) {
+        console.error('error occered while login process', error.message);
+      } else {
+        console.error('unexpected error', error);
+      }
     }
   };
 
