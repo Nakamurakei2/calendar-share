@@ -6,7 +6,7 @@ import {loginSchema, LoginShcemaType} from '../types/resolver';
 import {NextRouter, useRouter} from 'next/router';
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
-import {ResponseData} from './api/login';
+import {ResponseData} from '../types/global';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const token: string | undefined = context.req.cookies?.token;

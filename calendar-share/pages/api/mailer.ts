@@ -1,17 +1,6 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import nodemailer from 'nodemailer';
-
-type SuccessResponse = {
-  status: 'success';
-  message: string;
-};
-
-type ErrorResponse = {
-  status: 'error';
-  message: string;
-};
-
-export type MailerResponse = SuccessResponse | ErrorResponse;
+import {ResponseData} from '../../types/global';
 
 type MailerRequestBody = {
   name: string;
@@ -21,7 +10,7 @@ type MailerRequestBody = {
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<MailerResponse>,
+  res: NextApiResponse<ResponseData>,
 ) {
   if (req.method == 'POST') {
     const {name, email, content} = req.body as MailerRequestBody;

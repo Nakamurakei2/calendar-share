@@ -1,22 +1,10 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import jwt from 'jsonwebtoken';
-
-type SuccessResponse = {
-  status: 'success';
-  currentUserId?: number;
-  message: string;
-};
-
-type ErrorResponse = {
-  status: 'error';
-  message: string;
-};
-
-export type UserIdResponseData = SuccessResponse | ErrorResponse;
+import {ResponseData} from '../../types/global';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<UserIdResponseData>,
+  res: NextApiResponse<ResponseData<number>>,
 ) {
   const token: string | undefined = req.cookies.token;
   if (!token)

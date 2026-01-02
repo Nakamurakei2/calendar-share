@@ -3,26 +3,15 @@ import pool from '../../lib/db';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {serialize} from 'cookie';
+import {ResponseData} from '../../types/global';
 
-type LoginRequestBody = {
+type UserRow = {
+  id: number;
   email: string;
   password: string;
 };
 
-type SuccessResponse = {
-  status: 'success';
-  message: string;
-};
-
-type ErrorResponse = {
-  status: 'error';
-  message: string;
-};
-
-export type ResponseData = SuccessResponse | ErrorResponse;
-
-type UserRow = {
-  id: number;
+type LoginRequestBody = {
   email: string;
   password: string;
 };

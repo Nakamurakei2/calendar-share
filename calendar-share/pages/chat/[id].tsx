@@ -8,8 +8,7 @@ import {useEffect, useRef, useState} from 'react';
 import {convertDateTimeToString} from '../../src/utils/CalendarUtils';
 import {MessageObj} from './types';
 import {generateRoomId} from '../../src/utils/generateRoomIdUtils';
-import {ResponseData} from '../api/messages';
-import {UserIdResponseData} from '../api/user_id';
+import {ResponseData} from '../../types/global';
 
 export const WEBSOCKET_URL = 'ws://localhost:8080';
 
@@ -37,11 +36,11 @@ export default function ChatPage() {
         return;
       }
 
-      const resData: ResponseData = await res.json();
+      const resData: ResponseData<undefined, MessageObj[]> = await res.json();
       if (resData.status === 'success') {
-        console.debug(resData.message);
-        const messages: MessageObj[] = resData.messages;
-        setMessages(messages);
+        const messages: MessageObj[] | undefined = resData.messages;
+        console.debug(messages);
+        if (messages) setMessages(messages);
       } else {
         console.error(resData.message);
       }
@@ -61,7 +60,7 @@ export default function ChatPage() {
         return;
       }
 
-      const resData: UserIdResponseData = await res.json();
+      const resData: ResponseData<number, undefined> = await res.json();
       if (resData.status === 'success') {
         const currentUserId: number | undefined = resData.currentUserId;
         setCurrentUserId(currentUserId);

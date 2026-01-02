@@ -1,6 +1,7 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import pool from '../../lib/db';
 import {MessageObj} from '../chat/types';
+import {ResponseData} from '../../types/global';
 
 type MesssageQuery = {
   content: string;
@@ -8,22 +9,9 @@ type MesssageQuery = {
   created_at: string;
 };
 
-type SuccessResponse = {
-  status: 'success';
-  message: string;
-  messages: MessageObj[];
-};
-
-type ErrorResponse = {
-  status: 'error';
-  message: string;
-};
-
-export type ResponseData = SuccessResponse | ErrorResponse;
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<ResponseData<undefined, MessageObj[]>>,
 ) {
   if (req.method === 'GET') {
     const {id} = req.query;
@@ -43,13 +31,11 @@ export default async function handler(
         };
       });
 
-      return res
-        .status(200)
-        .json({
-          status: 'success',
-          message: 'fetched messages successfully!',
-          messages: messages,
-        });
+      return res.status(200).json({
+        status: 'success',
+        message: 'fetched messages successfully!',
+        messages: messages,
+      });
     }
   } else {
     return res

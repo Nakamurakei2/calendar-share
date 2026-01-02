@@ -1,30 +1,7 @@
 import pool from '../../lib/db';
 import {NextApiRequest, NextApiResponse} from 'next';
 import bcrypt from 'bcrypt';
-
-type SuccessResponse = {
-  status: 'success';
-  message: string;
-  data?: ResponseDataType;
-};
-
-type ErrorResponse = {
-  status: 'error';
-  message: string;
-};
-
-export type ResponseData = SuccessResponse | ErrorResponse;
-
-type ResponseDataType = {
-  data?: {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    confirm_password: string;
-    created_at: Date;
-  };
-};
+import {ResponseData} from '../../types/global';
 
 type RegisterRequestBody = {
   name: string;
@@ -51,7 +28,6 @@ export default async function handler(
         return res.status(201).json({
           status: 'success',
           message: 'Registered successfully',
-          data: result.rows[0],
         });
       } else {
         return res

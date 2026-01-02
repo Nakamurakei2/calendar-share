@@ -3,7 +3,7 @@ import Footer from '../../src/components/ui/footer/Footer';
 import {useFooterActions} from '../../src/hooks/useFooterActions';
 import styles from './styles.module.css';
 import {NextRouter, useRouter} from 'next/router';
-import {MailerResponse} from '../api/mailer';
+import {ResponseData} from '../../types/global';
 
 type State = {
   name: string;
@@ -35,7 +35,6 @@ const formReducer = (state: State, action: Action): State => {
     case 'resetState':
       return formInitialValue;
   }
-  return state;
 };
 
 const formInitialValue: State = {
@@ -76,7 +75,7 @@ const ContactIndexPage = () => {
       return;
     }
 
-    const resData: MailerResponse = await res.json();
+    const resData: ResponseData = await res.json();
     if (resData.status === 'success') {
       dispatch({type: 'resetState'});
       alert('送信されました');
