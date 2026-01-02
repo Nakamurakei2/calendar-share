@@ -9,6 +9,7 @@ import {convertDateTimeToString} from '../../src/utils/CalendarUtils';
 import {MessageObj} from './types';
 import {generateRoomId} from '../../src/utils/generateRoomIdUtils';
 import {ResponseData} from '../api/messages';
+import {UserIdResponseData} from '../api/user_id';
 
 export const WEBSOCKET_URL = 'ws://localhost:8080';
 
@@ -55,15 +56,19 @@ export default function ChatPage() {
   useEffect(() => {
     const fetchUserId = async () => {
       const res = await fetch(`/api/user_id`);
-      if (res.ok) {
-        const data = await res.json();
-        const currentUserId: number = data.currentUserId;
+      if (!res.ok) {
+        console.error('HTTP error', res.status);
+        return;
+      }
 
+      const resData: UserIdResponseData = await res.json();
+      if (resData.status === 'success') {
+        const currentUserId: number | undefined = resData.currentUserId;
         setCurrentUserId(currentUserId);
-        // setRoomId
-        // 小さい数字から結合するように修正
-        const unionIds: string = generateRoomId(currentUserId, Number(id));
-        setRoomId(Number(unionIds));
+        if (currentUserId) {
+          const unionIds: string = generateRoomId(currentUserId, Number(id));
+          setRoomId(Number(unionIds));
+        }
       }
     };
     fetchUserId();

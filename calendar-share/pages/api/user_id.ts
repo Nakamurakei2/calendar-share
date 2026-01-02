@@ -1,18 +1,26 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import jwt from 'jsonwebtoken';
 
-export type ResponseData = {
-  message: string;
+type SuccessResponse = {
+  status: 'success';
   currentUserId?: number;
+  message: string;
 };
+
+type ErrorResponse = {
+  status: 'error';
+  message: string;
+};
+
+export type UserIdResponseData = SuccessResponse | ErrorResponse;
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<UserIdResponseData>,
 ) {
-  // 現在ログイン中のuser_idをがっちゃんこしたnumber型をroom_idとして返したい
-  const token = req.cookies.token;
-  if (!token) return res.status(500).json({message: 'not authorized'});
+  const token: string | undefined = req.cookies.token;
+  if (!token)
+    return res.status(500).json({status: 'error', message: 'not authorized'});
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
     userId: number;
@@ -21,8 +29,9 @@ export default async function handler(
 
   if (currentUserId) {
     return res.status(200).json({
+      status: 'success',
       currentUserId: currentUserId,
-      message: 'Get userIds successfully!',
+      message: 'fetched userIds successfully!',
     }); // statuscode適当
   }
 }
