@@ -2,10 +2,11 @@ import Link from 'next/link';
 import styles from './styles/auth.module.css';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useRouter} from 'next/router';
+import {NextRouter, useRouter} from 'next/router';
 import {registerSchema, RegisterSchemaType} from '../types/resolver';
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
+import {ResponseData} from './api/login';
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const token: string | undefined = context.req.cookies?.token;
@@ -18,14 +19,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: {
-      message: 'hoge',
-    },
+    props: {},
   };
 }
 
 export default function RegisterPage() {
-  const router = useRouter();
+  const router: NextRouter = useRouter();
   const {
     register,
     handleSubmit,
@@ -40,10 +39,13 @@ export default function RegisterPage() {
       },
       body: JSON.stringify(data),
     });
-    if (res.ok) {
-      // ログインページに遷移する
-      router.push('/login');
+    if (!res.ok) {
+      console.error('HTTP error', res.status);
+      return;
     }
+    const resData: ResponseData = await res.json();
+    if (resData.status === 'success') router.push('/');
+    else router.push('/register');
   };
 
   return (
