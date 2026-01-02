@@ -8,6 +8,7 @@ import {useEffect, useRef, useState} from 'react';
 import {convertDateTimeToString} from '../../src/utils/CalendarUtils';
 import {MessageObj} from './types';
 import {generateRoomId} from '../../src/utils/generateRoomIdUtils';
+import {ResponseData} from '../api/messages';
 
 export const WEBSOCKET_URL = 'ws://localhost:8080';
 
@@ -30,10 +31,18 @@ export default function ChatPage() {
       const res = await fetch(`/api/messages?id=${roomId}`, {
         method: 'GET',
       });
-      if (res.ok) {
-        const data = await res.json();
-        const messages: MessageObj[] = data.messages;
+      if (!res.ok) {
+        console.error('HTTP error', res.status);
+        return;
+      }
+
+      const resData: ResponseData = await res.json();
+      if (resData.status === 'success') {
+        console.debug(resData.message);
+        const messages: MessageObj[] = resData.messages;
         setMessages(messages);
+      } else {
+        console.error(resData.message);
       }
     };
     fetchMessages();
