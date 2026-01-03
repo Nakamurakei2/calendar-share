@@ -10,7 +10,7 @@ import {useEffect, useState} from 'react';
 import {UserDataResponse} from '../api/getUserData';
 
 const ProfileIndexPage = () => {
-  const [username, setUsername] = useState<string>('');
+  const [currentUsername, setCurrentUsername] = useState<string>('');
   const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
     useFooterActions();
 
@@ -32,7 +32,7 @@ const ProfileIndexPage = () => {
       const resData: UserDataResponse = await res.json();
       if (resData.status === 'success') {
         const username = resData.username;
-        if (username) setUsername(username);
+        if (username) setCurrentUsername(username);
       }
     };
     getCurrentUser();
@@ -45,20 +45,20 @@ const ProfileIndexPage = () => {
       {activeSetting === 'phoneNumber' ? (
         <PhoneNumberSetting close={close} />
       ) : activeSetting === 'username' ? (
-        <UsernameSetting close={close} setUsername={setUsername}/>
+        <UsernameSetting close={close} currentUsername={currentUsername} setCurrentUsername={setCurrentUsername} />
       ) : null}
 
       <div className={styles.profileContainer}>
         <p className={styles.profileSubtitle}>基本情報</p>
 
-        <div className={styles.profileContent} onClick={openPhone}>
+        {/* <div className={styles.profileContent} onClick={openPhone}>
           <p className={styles.title}>電話番号</p>
           <p className={styles.value}>090-0000-0000</p>
-        </div>
+        </div> */}
 
         <div className={styles.profileContent} onClick={openUsername}>
           <p className={styles.title}>名前</p>
-          <p className={styles.value}>{username}</p>
+          <p className={styles.value}>{currentUsername}</p>
         </div>
       </div>
 

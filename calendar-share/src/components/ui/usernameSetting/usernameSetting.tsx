@@ -5,10 +5,15 @@ import {UserDataResponse} from '../../../../pages/api/getUserData';
 
 type Props = {
   close: () => void;
-  setUsername: Dispatch<SetStateAction<string>>;
+  currentUsername: string;
+  setCurrentUsername: Dispatch<SetStateAction<string>>;
 };
 
-const UsernameSetting = ({close, setUsername}: Props) => {
+const UsernameSetting = ({
+  close,
+  currentUsername,
+  setCurrentUsername,
+}: Props) => {
   const [newUsername, setNewUsername] = useState<string>('');
   const {loading, withLoading} = useLoading();
 
@@ -32,7 +37,7 @@ const UsernameSetting = ({close, setUsername}: Props) => {
       if (resData.status === 'success') {
         console.debug(resData.message);
         const username: string | undefined = resData.username;
-        if (username) setUsername(username);
+        if (username) setCurrentUsername(username);
         close(); // 成功した場合に何か表示させたい
       }
     });
@@ -51,7 +56,7 @@ const UsernameSetting = ({close, setUsername}: Props) => {
         <div className={styles.card}>
           <div className={styles.field}>
             <label>現在のユーザー名</label>
-            <p className={styles.current}>demo太郎</p>
+            <p className={styles.current}>{currentUsername}</p>
           </div>
 
           <div className={styles.field}>
