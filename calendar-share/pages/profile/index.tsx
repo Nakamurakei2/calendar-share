@@ -45,10 +45,15 @@ const ProfileIndexPage = () => {
       {activeSetting === 'phoneNumber' ? (
         <PhoneNumberSetting close={close} />
       ) : activeSetting === 'username' ? (
-        <UsernameSetting close={close} currentUsername={currentUsername} setCurrentUsername={setCurrentUsername} />
+        <UsernameSetting
+          close={close}
+          currentUsername={currentUsername}
+          setCurrentUsername={setCurrentUsername}
+        />
       ) : null}
 
       <div className={styles.profileContainer}>
+        <img src="" alt="" className={styles.profileImage} />
         <p className={styles.profileSubtitle}>基本情報</p>
 
         {/* <div className={styles.profileContent} onClick={openPhone}>
