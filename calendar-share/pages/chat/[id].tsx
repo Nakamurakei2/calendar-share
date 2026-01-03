@@ -23,7 +23,7 @@ export default function ChatPage() {
   );
 
   const {messages, setMessages} = useWebSocket(WEBSOCKET_URL, roomId);
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null); // toScroll
 
   useEffect(() => {
     // fetch message

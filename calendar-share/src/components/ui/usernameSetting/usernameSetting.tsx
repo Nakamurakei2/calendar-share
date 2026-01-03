@@ -1,10 +1,41 @@
+import React, {useState} from 'react';
 import styles from './styles.module.css';
+import {ResponseData} from '../../../../types/global';
+import {useLoading} from '../../../../src/hooks/useLoading';
 
 type Props = {
   close: () => void;
 };
 
 const UsernameSetting = ({close}: Props) => {
+  const [newUsername, setNewUsername] = useState<string>('');
+
+  const {loading, withLoading} = useLoading();
+
+  const updateUsername = async () => {
+    await withLoading(async () => {
+      const res = await fetch('/api/updateUsername', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: newUsername,
+        }),
+      });
+
+      if (!res.ok) {
+        console.error('HTTP error', res.status);
+        return;
+      }
+      const resData: ResponseData = await res.json();
+      if (resData.status === 'success') {
+        console.debug(resData.message);
+        close(); // 成功した場合に何か表示させたい
+      }
+    });
+  };
+
   return (
     <div className={styles.overlay}>
       <div className={styles.container}>
@@ -23,10 +54,28 @@ const UsernameSetting = ({close}: Props) => {
 
           <div className={styles.field}>
             <label htmlFor="newUsername">新しいユーザー名</label>
-            <input id="newUsername" type="text" placeholder="" />
+            <input
+              id="newUsername"
+              type="text"
+              placeholder=""
+              value={newUsername}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setNewUsername(e.target.value)
+              }
+            />
           </div>
 
-          <button className={styles.saveButton}>変更を保存</button>
+          <button
+            className={
+              newUsername.length > 0
+                ? styles.saveButton
+                : styles.disableSaveButton
+            }
+            onClick={() => updateUsername()}
+            disabled={loading}
+          >
+            変更を保存
+          </button>
         </div>
       </div>
     </div>
