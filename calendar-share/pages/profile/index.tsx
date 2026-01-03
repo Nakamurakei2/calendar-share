@@ -6,13 +6,37 @@ import {useProfileSettingActions} from '../../src/hooks/useProfileSettingActions
 import styles from './styles.module.css';
 import PhoneNumberSetting from '../../src/components/ui/phoneNumberSetting/phoneNumberSetting';
 import UsernameSetting from '../../src/components/ui/usernameSetting/usernameSetting';
+import {useEffect, useState} from 'react';
+import {UserDataResponse} from '../api/getUserData';
 
 const ProfileIndexPage = () => {
+  const [username, setUsername] = useState<string>('');
   const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
     useFooterActions();
 
   const {activeSetting, openPhone, openUsername, close} =
     useProfileSettingActions();
+
+  useEffect(() => {
+    // 最新のユーザー情報を取得
+    const getCurrentUser = async () => {
+      const res = await fetch('/api/getUserData', {
+        method: 'GET',
+      });
+
+      if (!res.ok) {
+        console.error('HTTP error', res.status);
+        return;
+      }
+
+      const resData: UserDataResponse = await res.json();
+      if (resData.status === 'success') {
+        const username = resData.username;
+        if (username) setUsername(username);
+      }
+    };
+    getCurrentUser();
+  }, []);
 
   return (
     <div className={styles.profileWrapper}>
@@ -21,7 +45,7 @@ const ProfileIndexPage = () => {
       {activeSetting === 'phoneNumber' ? (
         <PhoneNumberSetting close={close} />
       ) : activeSetting === 'username' ? (
-        <UsernameSetting close={close} />
+        <UsernameSetting close={close} setUsername={setUsername}/>
       ) : null}
 
       <div className={styles.profileContainer}>
@@ -34,7 +58,7 @@ const ProfileIndexPage = () => {
 
         <div className={styles.profileContent} onClick={openUsername}>
           <p className={styles.title}>名前</p>
-          <p className={styles.value}>demo中村</p>
+          <p className={styles.value}>{username}</p>
         </div>
       </div>
 

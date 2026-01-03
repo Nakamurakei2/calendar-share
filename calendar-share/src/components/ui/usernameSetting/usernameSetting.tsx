@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import styles from './styles.module.css';
-import {ResponseData} from '../../../../types/global';
 import {useLoading} from '../../../../src/hooks/useLoading';
+import {UserDataResponse} from '../../../../pages/api/getUserData';
 
 type Props = {
   close: () => void;
+  setUsername: Dispatch<SetStateAction<string>>;
 };
 
-const UsernameSetting = ({close}: Props) => {
+const UsernameSetting = ({close, setUsername}: Props) => {
   const [newUsername, setNewUsername] = useState<string>('');
-
   const {loading, withLoading} = useLoading();
 
   const updateUsername = async () => {
@@ -28,9 +28,11 @@ const UsernameSetting = ({close}: Props) => {
         console.error('HTTP error', res.status);
         return;
       }
-      const resData: ResponseData = await res.json();
+      const resData: UserDataResponse = await res.json();
       if (resData.status === 'success') {
         console.debug(resData.message);
+        const username: string | undefined = resData.username;
+        if (username) setUsername(username);
         close(); // 成功した場合に何か表示させたい
       }
     });

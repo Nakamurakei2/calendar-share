@@ -8,9 +8,13 @@ type UpdateUsernameReqBody = {
   username: string;
 };
 
+export type UpdateUsernameResponse = {
+  username?: string;
+} & ResponseData;
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<UpdateUsernameResponse>,
 ) {
   if (req.method === 'PATCH') {
     const {username} = req.body as UpdateUsernameReqBody;
@@ -34,18 +38,20 @@ export default async function handler(
     }
 
     const result = await pool.query(
-      'update users set name = $1 where id = $2 returning *',
+      'update users set name = $1 where id = $2 returning name',
       [username, userId],
     );
-
     if (result.rows.length === 0) {
       return res
         .status(500)
         .json({status: 'error', message: 'failed to update username'});
     }
+    const name: string = result.rows[0].name;
 
-    return res
-      .status(200)
-      .json({status: 'success', message: 'updated username successfully!!'});
+    return res.status(200).json({
+      status: 'success',
+      message: 'updated username successfully!!',
+      username: name,
+    });
   }
 }
