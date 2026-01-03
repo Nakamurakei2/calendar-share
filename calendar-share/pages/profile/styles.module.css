@@ -47,6 +47,14 @@
   background-color: #f1f5f9;
 }
 
+.profileImage{
+  width: 100px;
+  height: 100px;
+  border-radius: 999px;
+  background-color: #64748b;
+  margin: 0 auto 10% auto;
+}
+
 /* =====================
    Text
 ===================== */
