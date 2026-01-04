@@ -65,3 +65,14 @@
 .fc .fc-toolbar-title {
   font-size: 1.4rem;
 }
+
+.fc .fc-col-header-cell-cushion {
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.fc .fc-daygrid-day-number {
+  font-size: 14px;
+  margin: 0 auto;
+  padding: 2px;
+}

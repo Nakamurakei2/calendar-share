@@ -1,6 +1,6 @@
 import {GetServerSidePropsContext} from 'next';
 import jwt from 'jsonwebtoken';
-import {createContext, useState} from 'react';
+import {createContext, useEffect, useRef, useState} from 'react';
 import {Client} from 'pg';
 import Modal, {ModalInfo} from '../src/components/ui/Modal/Modal';
 import Calendar from '../src/components/ui/Calendar/Calendar';
@@ -15,7 +15,7 @@ import {
 import {useCalendarActions} from '../src/hooks/useCalendarActions';
 import {useFooterActions} from '../src/hooks/useFooterActions';
 import Footer from '../src/components/ui/footer/Footer';
-import {useRouter} from 'next/router';
+import FullCalendar from '@fullcalendar/react';
 
 const EVENT_COLORS = {
   [HOLIDAY]: {backgroundColor: '#10b981', borderColor: '#059669'},
@@ -80,7 +80,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function IndexPage(calendarProps: {calendarProps: string}) {
-  const router = useRouter();
+  const calendarRef = useRef<FullCalendar | null>(null);
+
   const [showModal, setShowModal] = useState<boolean>(false);
   // 好ましくない実装
   const [email, setEmail] = useState<string>(() => {
@@ -128,13 +129,17 @@ export default function IndexPage(calendarProps: {calendarProps: string}) {
   const {onCalendarBtnClick, onChatBtnClick, onProfileBtnClick} =
     useFooterActions();
 
+  useEffect(() => {
+    console.log('calendarref', calendarRef);
+  }, []);
+
   return (
-    <div className="max-w-7xl mx-auto box-border min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
+    <div>
       <Calendar
         handleDateClick={handleDateClick}
         CalendarUITypes={calendarData}
-        selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
+        calendarRef={calendarRef}
       />
 
       {showModal && (
